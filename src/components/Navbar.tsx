@@ -28,9 +28,8 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between h-24 md:h-28">
-        <a href="#" className="shrink-0 relative">
-          <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl pointer-events-none" />
-          <img src={logo} alt="Diamond Touch Mobile Detailing" className="relative h-28 md:h-36 w-auto" style={{ mixBlendMode: 'screen' }} />
+        <a href="#" className="shrink-0">
+          <img src={logo} alt="Diamond Touch Mobile Detailing" className="h-28 md:h-36 w-auto rounded-lg" />
         </a>
 
         {/* Desktop links */}
