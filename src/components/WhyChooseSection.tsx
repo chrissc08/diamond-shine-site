@@ -7,6 +7,7 @@ const reasons = [
   { icon: FlaskConical, title: "Professional-Grade Chemicals", desc: "We use only the best pH-balanced, paint-safe products in the industry." },
   { icon: Truck, title: "Mobile Convenience", desc: "We come to you. (Orange County, NY & Surrounding Areas)" },
   { icon: Eye, title: "Attention to Detail", desc: "Every crevice, every surface. We don't cut corners." },
+  { icon: Gift, title: "Referrals", desc: "Refer someone and receive $25 off your next detail. Referred party additionally receives $25 off their first service." },
 ];
 
 const WhyChooseSection = () => {
