@@ -14,27 +14,30 @@ const HeroSection = () => {
           loading="eager"
         />
         <div className="absolute inset-0 hero-gradient" />
-        <div className="absolute inset-0 bg-background/50" />
+        <div className="absolute inset-0 bg-background/60" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 text-center pt-12 pb-24">
-        <img
-          src={logo}
-          alt="Diamond Touch Mobile Detailing"
-          className="mx-auto w-64 md:w-80 lg:w-96 mb-10 reveal drop-shadow-2xl"
-        />
+      <div className="relative z-10 container mx-auto px-6 text-center pt-28 pb-24">
+        {/* Logo prominently displayed */}
+        <div className="mb-8 reveal">
+          <img
+            src={logo}
+            alt="Diamond Touch Mobile Detailing"
+            className="mx-auto w-56 md:w-72 lg:w-80 drop-shadow-[0_0_30px_rgba(30,144,255,0.3)]"
+          />
+        </div>
 
-        <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] mb-6 reveal reveal-delay-1">
+        <h1 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08] mb-6 reveal reveal-delay-1">
           Premium Mobile Detailing —{" "}
-          <span className="text-primary text-glow">We Bring the Shine to You</span>
+          <span className="text-primary text-glow block mt-2">We Bring the Shine to You</span>
         </h1>
 
-        <p className="text-silver text-lg md:text-xl max-w-2xl mx-auto mb-10 reveal reveal-delay-2 font-light">
+        <p className="text-silver text-base md:text-xl max-w-2xl mx-auto mb-10 reveal reveal-delay-2 font-light leading-relaxed">
           Deep cleaning, paint-safe techniques, and showroom-level results at your doorstep.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 reveal reveal-delay-3">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-14 reveal reveal-delay-3">
           <a
             href="#booking"
             className="inline-flex items-center justify-center px-8 py-4 font-display text-sm font-semibold tracking-wider uppercase bg-primary text-primary-foreground rounded-lg box-glow hover:box-glow-strong transition-shadow duration-300 active:scale-[0.97]"
