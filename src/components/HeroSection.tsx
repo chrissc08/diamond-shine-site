@@ -1,4 +1,3 @@
-import logo from "@/assets/logo.png";
 import heroCar from "@/assets/hero-car.jpg";
 import { Shield, Wrench, CheckCircle } from "lucide-react";
 
@@ -19,14 +18,7 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 text-center pt-28 pb-24">
-        {/* Logo prominently displayed */}
-        <div className="mb-8 reveal">
-          <img
-            src={logo}
-            alt="Diamond Touch Mobile Detailing"
-            className="mx-auto w-56 md:w-72 lg:w-80 drop-shadow-[0_0_30px_rgba(30,144,255,0.3)]"
-          />
-        </div>
+        {/* Logo is in the navbar only */}
 
         <h1 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08] mb-6 reveal reveal-delay-1">
           Premium Mobile Detailing —{" "}
@@ -67,6 +59,10 @@ const HeroSection = () => {
             Satisfaction Guaranteed
           </span>
         </div>
+
+        <p className="mt-8 text-silver/60 text-xs max-w-md mx-auto reveal reveal-delay-5">
+          Final price depends on vehicle condition. Photos may be required for accurate quote.
+        </p>
       </div>
 
       {/* Sticky Book Now on mobile */}
