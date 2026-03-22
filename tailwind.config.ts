@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Orbitron", "sans-serif"],
+        display: ["Josefin Sans", "sans-serif"],
         body: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
