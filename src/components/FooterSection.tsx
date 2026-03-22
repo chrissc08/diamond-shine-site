@@ -1,29 +1,49 @@
 import logo from "@/assets/logo-clean.png";
-import { Instagram, Facebook, Phone, Mail } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 
 const FooterSection = () => {
   return (
-    <footer className="border-t border-border py-12">
+    <footer className="border-t border-border py-16">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
-          <div className="flex flex-col items-center md:items-start gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          {/* Logo & tagline */}
+          <div className="flex flex-col gap-4">
             <img src={logo} alt="Diamond Touch Mobile Detailing" className="w-40 rounded-lg" />
-            <p className="text-muted-foreground text-sm">Orange County, NY & Surrounding Areas</p>
+            <p className="text-muted-foreground text-sm max-w-xs">
+              Orange County, NY's trusted mobile detailing service. We come to you.
+            </p>
           </div>
 
-          <div className="flex flex-col items-center md:items-end gap-3 text-sm text-muted-foreground">
-            <div className="flex gap-4">
-              <a href="#packages" className="hover:text-primary transition-colors">Packages</a>
-              <a href="#booking" className="hover:text-primary transition-colors">Book Now</a>
-            </div>
-            <div className="flex gap-4">
-              <a href="#" aria-label="Instagram" className="hover:text-primary transition-colors"><Instagram className="w-5 h-5" /></a>
-              <a href="#" aria-label="Facebook" className="hover:text-primary transition-colors"><Facebook className="w-5 h-5" /></a>
-              <a href="tel:" aria-label="Call us" className="hover:text-primary transition-colors"><Phone className="w-5 h-5" /></a>
-              <a href="mailto:" aria-label="Email us" className="hover:text-primary transition-colors"><Mail className="w-5 h-5" /></a>
-            </div>
-            <p className="text-xs text-muted-foreground/60">© {new Date().getFullYear()} Diamond Touch Mobile Detailing. All rights reserved.</p>
+          {/* Quick Links */}
+          <div className="flex flex-col gap-3">
+            <h4 className="font-display text-sm tracking-[0.15em] uppercase text-foreground mb-1">Quick Links</h4>
+            <a href="#packages" className="text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">Packages</a>
+            <a href="#why" className="text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">Why Us</a>
+            <a href="#gallery" className="text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">Gallery</a>
+            <a href="#reviews" className="text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">Reviews</a>
+            <a href="#booking" className="text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">Contact</a>
           </div>
+
+          {/* Contact */}
+          <div className="flex flex-col gap-3">
+            <h4 className="font-display text-sm tracking-[0.15em] uppercase text-foreground mb-1">Contact</h4>
+            <a href="tel:" className="flex items-center gap-2 text-primary text-sm hover:text-primary/80 transition-colors w-fit">
+              <Phone className="w-4 h-4" /> (xxx) xxx-xxxx
+            </a>
+            <a href="mailto:" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
+              <Mail className="w-4 h-4" /> info@diamondtouchdetailing.com
+            </a>
+            <div className="flex items-start gap-2 text-muted-foreground text-sm">
+              <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
+              <span>Orange County, NY &<br />Surrounding Areas</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-border mt-12 pt-8">
+          <p className="text-center text-xs text-muted-foreground/60">
+            © {new Date().getFullYear()} Diamond Touch Mobile Detailing. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
