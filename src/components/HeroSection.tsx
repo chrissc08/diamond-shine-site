@@ -63,6 +63,9 @@ const HeroSection = () => {
         <p className="mt-8 text-silver/60 text-xs max-w-md mx-auto reveal reveal-delay-5">
           Final price depends on vehicle condition. Photos may be required for accurate quote.
         </p>
+        <p className="mt-3 text-silver/60 text-xs max-w-md mx-auto reveal reveal-delay-5">
+          We supply our own power — we just ask to hook up to your water.
+        </p>
       </div>
 
       {/* Sticky Book Now on mobile */}

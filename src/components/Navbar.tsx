@@ -27,9 +27,9 @@ const Navbar = () => {
         scrolled ? "bg-background/95 backdrop-blur-md border-b border-border shadow-lg" : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between h-16 md:h-20">
+      <div className="container mx-auto px-6 flex items-center justify-between h-24 md:h-28">
         <a href="#" className="shrink-0">
-          <img src={logo} alt="Diamond Touch Mobile Detailing" className="h-20 md:h-24 w-auto" />
+          <img src={logo} alt="Diamond Touch Mobile Detailing" className="h-28 md:h-36 w-auto drop-shadow-[0_0_20px_rgba(30,144,255,0.25)]" style={{ mixBlendMode: 'lighten' }} />
         </a>
 
         {/* Desktop links */}
