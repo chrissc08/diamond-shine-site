@@ -140,6 +140,9 @@ const PackagesSection = () => {
         <p className="text-center text-muted-foreground text-xs mt-8 max-w-lg mx-auto">
           Final price depends on vehicle condition. Photos may be required for accurate quote.
         </p>
+        <p className="text-center text-muted-foreground text-xs mt-2 max-w-lg mx-auto">
+          We supply our own power — we just ask to hook up to your water.
+        </p>
       </div>
     </section>
   );
