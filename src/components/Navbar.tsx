@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-clean.png";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -29,7 +29,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-6 flex items-center justify-between h-24 md:h-28">
         <a href="#" className="shrink-0">
-          <img src={logo} alt="Diamond Touch Mobile Detailing" className="h-28 md:h-36 w-auto drop-shadow-[0_0_20px_rgba(30,144,255,0.25)]" style={{ mixBlendMode: 'lighten' }} />
+          <img src={logo} alt="Diamond Touch Mobile Detailing" className="h-28 md:h-36 w-auto drop-shadow-[0_0_20px_rgba(30,144,255,0.25)]" />
         </a>
 
         {/* Desktop links */}
