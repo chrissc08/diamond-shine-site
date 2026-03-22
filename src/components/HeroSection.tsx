@@ -1,4 +1,3 @@
-import logo from "@/assets/logo.png";
 import heroCar from "@/assets/hero-car.jpg";
 import { Shield, Wrench, CheckCircle } from "lucide-react";
 
