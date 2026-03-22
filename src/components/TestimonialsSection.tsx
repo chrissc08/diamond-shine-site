@@ -2,7 +2,7 @@ import { useScrollReveal } from "./useScrollReveal";
 import { Star } from "lucide-react";
 
 const testimonials = [
-  { name: "Sean B.", text: "My truck looked brand new after the Full Detail. Worth every penny — the interior smelled incredible.", rating: 5 },
+  { name: "Connor H.", text: "My truck looked brand new after the Full Detail. Worth every penny — the interior smelled incredible.", rating: 5 },
   { name: "Oliver K.", text: "They came right to my driveway and worked magic on my SUV. The ceramic coating still beads water weeks later.", rating: 5 },
   { name: "Raymond G.", text: "Had dog hair embedded in every seat. After their deep interior, not a single strand left. Seriously impressed.", rating: 5 },
 ];
