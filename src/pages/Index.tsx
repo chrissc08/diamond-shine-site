@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import PackagesSection from "@/components/PackagesSection";
 import AddOnsSection from "@/components/AddOnsSection";
@@ -10,12 +11,13 @@ import FooterSection from "@/components/FooterSection";
 const Index = () => {
   return (
     <main className="overflow-x-hidden">
+      <Navbar />
       <HeroSection />
       <PackagesSection />
-      <AddOnsSection />
-      <WhyChooseSection />
-      <GallerySection />
-      <TestimonialsSection />
+      <div id="addons"><AddOnsSection /></div>
+      <div id="why"><WhyChooseSection /></div>
+      <div id="gallery"><GallerySection /></div>
+      <div id="reviews"><TestimonialsSection /></div>
       <BookingSection />
       <FooterSection />
     </main>
