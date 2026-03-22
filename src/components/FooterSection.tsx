@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-clean.png";
 import { Instagram, Facebook, Phone, Mail } from "lucide-react";
 
 const FooterSection = () => {
