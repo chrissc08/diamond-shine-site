@@ -8,15 +8,6 @@ interface Package {
   time: string;
   sedanPrice: string;
   suvPrice: string;
-}
-
-interface Package {
-  name: string;
-  popular?: boolean;
-  features: string[];
-  time: string;
-  sedanPrice: string;
-  suvPrice: string;
   tagline: string;
   subtitle: string;
 }
@@ -105,7 +96,7 @@ const PackageCard = ({ pkg, index }: { pkg: Package; index: number }) => {
       <h3 className="font-display text-lg font-bold mb-1 tracking-wide">
         {pkg.name}
       </h3>
-      <p className="text-primary font-display text-sm mb-1 font-semibold">{pkg.popular ? "Complete Reset" : ""}</p>
+      <p className="text-muted-foreground text-sm mb-1">{pkg.subtitle}</p>
 
       <div className="flex items-center gap-2 text-muted-foreground text-sm mb-5">
         <Clock className="w-3.5 h-3.5" />
@@ -120,6 +111,8 @@ const PackageCard = ({ pkg, index }: { pkg: Package; index: number }) => {
           </li>
         ))}
       </ul>
+
+      <p className="text-primary/80 text-xs italic mb-4">👉 {pkg.tagline}</p>
 
       <div className="border-t border-border pt-5 space-y-2">
         <div className="flex justify-between text-sm">
