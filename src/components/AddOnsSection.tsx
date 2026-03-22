@@ -4,8 +4,7 @@ import { Dog, Droplets, Trash2, AlertTriangle, Mountain, ShieldCheck } from "luc
 const addOns = [
   { icon: Dog, name: "Pet Hair Removal", price: "$25–75" },
   { icon: Droplets, name: "Heavy Stain Removal", price: "$25–100" },
-  { icon: Trash2, name: "Excess Trash Cleanup", price: "$20–50" },
-  
+  { icon: Trash2, name: "Excess Trash Cleanup", price: "$20–50", note: "(applied to bill if car requires additional service time due to heavy amounts of trash)" },
   { icon: Mountain, name: "Excess Sand / Mud", price: "$30–80" },
   { icon: ShieldCheck, name: "Ceramic / Wet Coat", price: "$20–50" },
 ];
