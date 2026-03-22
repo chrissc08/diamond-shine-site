@@ -139,8 +139,11 @@ const PackagesSection = () => {
           <h2 className="font-display text-2xl md:text-4xl font-bold text-center mb-4 tracking-tight">
             Choose Your Level of Detail
           </h2>
-          <p className="text-center text-muted-foreground max-w-xl mx-auto mb-4 text-sm">
-            Limited appointments available — book your slot today.
+          <p className="text-center text-muted-foreground max-w-xl mx-auto mb-2 text-base md:text-lg">
+            Final price depends on vehicle condition. Photos may be required for accurate quote.
+          </p>
+          <p className="text-center text-muted-foreground max-w-xl mx-auto mb-4 text-base md:text-lg">
+            We supply our own power — we just ask to hook up to your water.
           </p>
         </div>
 
@@ -149,13 +152,6 @@ const PackagesSection = () => {
             <PackageCard key={pkg.name} pkg={pkg} index={i} />
           ))}
         </div>
-
-        <p className="text-center text-muted-foreground text-xs mt-8 max-w-lg mx-auto">
-          Final price depends on vehicle condition. Photos may be required for accurate quote.
-        </p>
-        <p className="text-center text-muted-foreground text-xs mt-2 max-w-lg mx-auto">
-          We supply our own power — we just ask to hook up to your water.
-        </p>
       </div>
     </section>
   );
