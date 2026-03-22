@@ -8,61 +8,72 @@ interface Package {
   time: string;
   sedanPrice: string;
   suvPrice: string;
+  tagline: string;
+  subtitle: string;
 }
 
 const packages: Package[] = [
   {
-    name: "Maintenance Detail",
+    name: "Signature Maintenance Detail",
+    subtitle: "Best for regularly maintained vehicles",
     features: [
-      "Exterior foam wash + contact wash",
-      "Wheels cleaned + tire shine",
-      "Windows cleaned",
+      "Foam Wash + Hand Wash",
+      "Wheels cleaned + tire shine applied",
+      "Streak-free window cleaning",
       "Light interior vacuum + wipe down",
     ],
     time: "1–1.5 hours",
     sedanPrice: "$80–120",
     suvPrice: "$100–140",
+    tagline: "Perfect for keeping your vehicle consistently clean",
   },
   {
-    name: "Standard Detail",
+    name: "Complete Reset Detail",
     popular: true,
+    subtitle: "A full refresh for your vehicle — inside & out",
     features: [
-      "Foam wash + contact wash",
-      "Wheels deep cleaned",
-      "Spray protection (ceramic or wet coat)",
+      "Deep Foam Pre-Wash + Detailed Hand Wash",
+      "Deep wheel cleaning (faces + barrels)",
+      "Spray protection (ceramic or sealant boost)",
       "Full interior vacuum",
       "Interior wipe down + UV protection",
-      "Windows cleaned",
+      "Streak-free window cleaning",
       "Light stain spot treatment",
     ],
     time: "2–3 hours",
     sedanPrice: "$150–200",
     suvPrice: "$180–240",
+    tagline: "Our most popular package — the perfect balance of clean & protection",
   },
   {
-    name: "Deep Interior Detail",
+    name: "Interior Restoration Detail",
+    subtitle: "For heavily used or neglected interiors",
     features: [
-      "Full vacuum + air blowout",
+      "Full vacuum + compressed air blowout",
       "Pet hair removal",
       "Steam cleaning",
-      "Shampoo + extraction",
+      "Shampoo + hot water extraction",
       "Stain & odor treatment",
       "Deep plastics cleaning + UV protection",
     ],
     time: "3–5 hours",
     sedanPrice: "$220–300",
     suvPrice: "$260–350",
+    tagline: "Brings your interior back to life",
   },
   {
-    name: "Full Detail",
+    name: "Diamond Full Detail",
+    subtitle: "The ultimate transformation package",
     features: [
-      "Everything in Standard + Deep Interior",
-      "Iron remover + tar removal if needed",
+      "Deep Foam Pre-Wash + Detailed Hand Wash",
+      "Everything in Complete Reset + Interior Restoration",
+      "Iron decontamination + tar removal (if needed)",
       "Long-lasting spray protection",
     ],
     time: "4–6 hours",
     sedanPrice: "$300–450",
     suvPrice: "$350–550",
+    tagline: "Showroom-level results, inside and out",
   },
 ];
 
@@ -85,7 +96,7 @@ const PackageCard = ({ pkg, index }: { pkg: Package; index: number }) => {
       <h3 className="font-display text-lg font-bold mb-1 tracking-wide">
         {pkg.name}
       </h3>
-      <p className="text-primary font-display text-sm mb-1 font-semibold">{pkg.popular ? "Complete Reset" : ""}</p>
+      <p className="text-muted-foreground text-sm mb-1">{pkg.subtitle}</p>
 
       <div className="flex items-center gap-2 text-muted-foreground text-sm mb-5">
         <Clock className="w-3.5 h-3.5" />
@@ -100,6 +111,8 @@ const PackageCard = ({ pkg, index }: { pkg: Package; index: number }) => {
           </li>
         ))}
       </ul>
+
+      <p className="text-primary/80 text-xs italic mb-4">👉 {pkg.tagline}</p>
 
       <div className="border-t border-border pt-5 space-y-2">
         <div className="flex justify-between text-sm">
