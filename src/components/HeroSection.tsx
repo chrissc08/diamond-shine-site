@@ -22,7 +22,7 @@ const HeroSection = () => {
 
         <h1 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08] mb-6 reveal reveal-delay-1">
           Premium Mobile Detailing —{" "}
-          <span className="text-primary text-glow block mt-2">Not Just Clean—Diamond Clean.</span>
+          <span className="text-primary text-glow block mt-2">Precision. Perfection. Diamond Touch.</span>
         </h1>
 
         <p className="text-silver text-base md:text-xl max-w-2xl mx-auto mb-10 reveal reveal-delay-2 font-light leading-relaxed">
