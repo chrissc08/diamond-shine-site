@@ -5,7 +5,7 @@ const reasons = [
   { icon: Flame, title: "Steam Cleaning", desc: "Deep sanitization that eliminates bacteria and grime without harsh chemicals." },
   { icon: Droplets, title: "Extraction Services", desc: "Professional carpet and upholstery extraction for the deepest clean possible." },
   { icon: FlaskConical, title: "Professional-Grade Chemicals", desc: "We use only the best pH-balanced, paint-safe products in the industry." },
-  { icon: Truck, title: "Mobile Convenience", desc: "We come to you." },
+  { icon: Truck, title: "Mobile Convenience", desc: "We come to you. (Orange County, NY & Surrounding Areas)" },
   { icon: Eye, title: "Attention to Detail", desc: "Every crevice, every surface. We don't cut corners." },
 ];
 
