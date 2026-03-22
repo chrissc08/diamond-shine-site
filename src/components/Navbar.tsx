@@ -29,7 +29,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-6 flex items-center justify-between h-16 md:h-20">
         <a href="#" className="shrink-0">
-          <img src={logo} alt="Diamond Touch Mobile Detailing" className="h-12 md:h-14 w-auto" />
+          <img src={logo} alt="Diamond Touch Mobile Detailing" className="h-20 md:h-24 w-auto" />
         </a>
 
         {/* Desktop links */}
