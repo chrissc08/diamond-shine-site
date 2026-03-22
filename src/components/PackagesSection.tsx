@@ -25,7 +25,7 @@ const packages: Package[] = [
     time: "1–1.5 hours",
     sedanPrice: "$80–120",
     suvPrice: "$100–140",
-    tagline: "Perfect for keeping your vehicle consistently clean",
+    tagline: "Fast, consistent clean for already-maintained cars",
   },
   {
     name: "Complete Reset Detail",
