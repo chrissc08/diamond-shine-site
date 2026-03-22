@@ -8,7 +8,7 @@ const FooterSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Logo & tagline */}
           <div className="flex flex-col gap-4">
-            <img src={logo} alt="Diamond Touch Mobile Detailing" className="w-40 rounded-lg" />
+            <img src={logo} alt="Diamond Touch Mobile Detailing" className="w-64 md:w-72 rounded-lg" />
             <p className="text-muted-foreground text-sm max-w-xs">
               Orange County, NY's trusted mobile detailing service. We come to you.
             </p>
