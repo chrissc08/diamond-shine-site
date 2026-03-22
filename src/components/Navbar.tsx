@@ -27,7 +27,7 @@ const Navbar = () => {
         scrolled ? "bg-background/95 backdrop-blur-md border-b border-border shadow-lg" : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between h-16 md:h-20">
+      <div className="mx-auto px-8 md:px-12 flex items-center justify-between h-16 md:h-20 w-full">
         <a href="#" className="shrink-0 flex items-center gap-3">
           <img src={logo} alt="Diamond Touch Mobile Detailing" className="h-14 md:h-[72px] w-auto" />
           <span className="hidden sm:block font-display text-[10px] md:text-xs tracking-[0.1em] uppercase text-silver/70 leading-tight">
