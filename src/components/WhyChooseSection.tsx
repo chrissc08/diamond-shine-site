@@ -1,5 +1,5 @@
 import { useScrollReveal } from "./useScrollReveal";
-import { Flame, Droplets, FlaskConical, Truck, Eye } from "lucide-react";
+import { Flame, Droplets, FlaskConical, Truck, Eye, Gift } from "lucide-react";
 
 const reasons = [
   { icon: Flame, title: "Steam Cleaning", desc: "Deep sanitization that eliminates bacteria and grime without harsh chemicals." },
