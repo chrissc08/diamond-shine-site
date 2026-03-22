@@ -36,6 +36,7 @@ const AddOnsSection = () => {
                 <item.icon className="w-8 h-8 text-primary mb-3" />
                 <h3 className="font-display text-xs font-semibold tracking-wide mb-2">{item.name}</h3>
                 <p className="text-primary font-display text-sm font-bold">{item.price}</p>
+                {"note" in item && <p className="text-muted-foreground text-[10px] mt-1 leading-tight">{item.note}</p>}
               </div>
             );
           })}
