@@ -7,7 +7,7 @@ const FooterSection = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-3">
-            <img src={logo} alt="Diamond Touch Mobile Detailing" className="w-40" style={{ mixBlendMode: 'screen' }} />
+            <img src={logo} alt="Diamond Touch Mobile Detailing" className="w-40 rounded-lg" />
             <p className="text-muted-foreground text-sm">Orange County, NY & Surrounding Areas</p>
           </div>
 
