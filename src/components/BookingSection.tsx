@@ -1,14 +1,28 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useScrollReveal } from "./useScrollReveal";
-import { Send } from "lucide-react";
+import { Send, Upload, X, ImageIcon } from "lucide-react";
 
 const BookingSection = () => {
   const { ref, visible } = useScrollReveal();
   const [submitted, setSubmitted] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setFiles((prev) => [...prev, ...newFiles].slice(0, 5));
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -70,10 +84,10 @@ const BookingSection = () => {
                 defaultValue=""
               >
                 <option value="" disabled>Select Package</option>
-                <option>Maintenance Detail</option>
-                <option>Standard Detail</option>
-                <option>Deep Interior Detail</option>
-                <option>Full Detail</option>
+                <option>Signature Maintenance Detail</option>
+                <option>Complete Reset Detail</option>
+                <option>Interior Restoration Detail</option>
+                <option>Diamond Full Detail</option>
               </select>
 
               <textarea
@@ -81,6 +95,48 @@ const BookingSection = () => {
                 placeholder="Describe the vehicle's current condition (optional)"
                 className="w-full px-4 py-3 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none"
               />
+
+              {/* File Upload */}
+              <div>
+                <label
+                  htmlFor="file-upload"
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-lg bg-card border border-dashed border-border text-muted-foreground text-sm cursor-pointer hover:border-primary/50 hover:text-foreground transition-colors"
+                >
+                  <Upload className="w-5 h-5 shrink-0 text-primary" />
+                  <span>Upload photos of your vehicle for a more accurate quote (max 5)</span>
+                </label>
+                <input
+                  ref={fileInputRef}
+                  id="file-upload"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+
+                {files.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {files.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-card border border-border text-xs text-foreground"
+                      >
+                        <ImageIcon className="w-3.5 h-3.5 text-primary shrink-0" />
+                        <span className="truncate max-w-[140px]">{file.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(index)}
+                          className="text-muted-foreground hover:text-destructive transition-colors"
+                          aria-label={`Remove ${file.name}`}
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               <button
                 type="submit"
