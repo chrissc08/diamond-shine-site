@@ -60,6 +60,10 @@ const HeroSection = () => {
             Satisfaction Guaranteed
           </span>
         </div>
+
+        <p className="mt-8 text-silver/60 text-xs max-w-md mx-auto reveal reveal-delay-5">
+          Final price depends on vehicle condition. Photos may be required for accurate quote.
+        </p>
       </div>
 
       {/* Sticky Book Now on mobile */}
