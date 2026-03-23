@@ -18,7 +18,7 @@ const PackageStep = ({ selected, onSelect }: PackageStepProps) => {
         </p>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
         {packages.map((pkg) => (
           <PackageCard
             key={pkg.id}
