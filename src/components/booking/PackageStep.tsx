@@ -47,7 +47,7 @@ const PackageCard = ({
     <button
       type="button"
       onClick={onSelect}
-      className={`relative flex flex-col text-left rounded-xl p-5 lg:p-6 border transition-all duration-300 active:scale-[0.97] cursor-pointer group ${
+      className={`relative flex flex-col text-left rounded-xl p-6 lg:p-7 border transition-all duration-300 active:scale-[0.97] cursor-pointer group h-full ${
         isSelected
           ? isDiamond
             ? "border-primary bg-primary/[0.06] box-glow-strong"
