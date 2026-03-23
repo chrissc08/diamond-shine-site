@@ -15,7 +15,7 @@ interface DetailsStepProps {
 }
 
 const inputClass =
-  "w-full pl-11 pr-4 py-3 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all duration-200";
+  "w-full pl-12 pr-4 py-3.5 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all duration-200";
 
 const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
   const update = (field: keyof BookingDetails, value: string) => {
@@ -33,10 +33,10 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
         </p>
       </div>
 
-      <div className="space-y-3">
-        <div className="grid sm:grid-cols-2 gap-3">
+      <div className="space-y-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           <div className="relative">
-            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               required
               type="text"
@@ -47,7 +47,7 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
             />
           </div>
           <div className="relative">
-            <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               required
               type="tel"
@@ -60,7 +60,7 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
         </div>
 
         <div className="relative">
-          <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="email"
             placeholder="Email Address"
@@ -71,7 +71,7 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
         </div>
 
         <div className="relative">
-          <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             required
             type="text"
@@ -83,7 +83,7 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
         </div>
 
         <div className="relative">
-          <Car className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Car className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <select
             required
             value={details.vehicleType}
@@ -100,7 +100,7 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
         </div>
 
         <div className="relative">
-          <FileText className="absolute left-3.5 top-3.5 w-4 h-4 text-muted-foreground" />
+          <FileText className="absolute left-4 top-4 w-4 h-4 text-muted-foreground" />
           <textarea
             rows={3}
             placeholder="Additional notes (optional)"
