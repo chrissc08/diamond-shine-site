@@ -62,7 +62,7 @@ const PackageCard = ({
       )}
 
       <div className="flex items-start justify-between gap-2 mb-1">
-        <h4 className="font-display text-sm font-bold tracking-wide leading-tight">
+        <h4 className="font-display text-base font-bold tracking-wide leading-tight">
           {pkg.name}
         </h4>
         <div
