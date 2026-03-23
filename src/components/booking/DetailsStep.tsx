@@ -34,7 +34,7 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
       </div>
 
       <div className="space-y-4">
-        <div className="grid sm:grid-cols-2 gap-3">
+        <div className="grid sm:grid-cols-2 gap-4">
           <div className="relative">
             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
