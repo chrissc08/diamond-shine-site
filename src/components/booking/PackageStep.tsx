@@ -95,7 +95,7 @@ const PackageCard = ({
         )}
       </ul>
 
-      <div className="border-t border-border pt-3 flex justify-between text-xs">
+      <div className="border-t border-border pt-4 flex justify-between text-sm">
         <div>
           <span className="text-muted-foreground">Sedan </span>
           <span className="font-display font-bold text-foreground">{pkg.sedanPrice}</span>
