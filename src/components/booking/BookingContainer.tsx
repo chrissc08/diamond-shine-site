@@ -157,7 +157,7 @@ const BookingSection = () => {
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-8 max-w-[calc(100%-280px-1.5rem)] lg:max-w-[calc(100%-280px-1.5rem)]">
+          <div className="flex items-center justify-between mt-8 lg:pr-[calc(280px+1.5rem)]">
             {step > 0 ? (
               <button
                 type="button"
