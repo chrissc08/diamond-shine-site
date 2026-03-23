@@ -15,7 +15,7 @@ interface DetailsStepProps {
 }
 
 const inputClass =
-  "w-full pl-11 pr-4 py-3 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all duration-200";
+  "w-full pl-12 pr-4 py-3.5 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all duration-200";
 
 const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
   const update = (field: keyof BookingDetails, value: string) => {
