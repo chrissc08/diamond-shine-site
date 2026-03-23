@@ -69,6 +69,9 @@ const AddOnsStep = ({ selected, onToggle }: AddOnsStepProps) => {
       <p className="text-center text-muted-foreground text-xs">
         Add-ons are optional — skip ahead if none are needed
       </p>
+      <p className="text-center text-muted-foreground/60 text-[11px]">
+        Diamond Full Detail already includes everything — no add-ons necessary
+      </p>
     </div>
   );
 };
