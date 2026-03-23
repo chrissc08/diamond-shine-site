@@ -1,4 +1,4 @@
-import { User, Phone, Mail, MapPin, Car, FileText } from "lucide-react";
+import { useState } from "react";
 
 export interface BookingDetails {
   name: string;
@@ -15,7 +15,7 @@ interface DetailsStepProps {
 }
 
 const inputClass =
-  "w-full pl-12 pr-4 py-3.5 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all duration-200";
+  "w-full px-4 py-3.5 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all duration-200";
 
 const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
   const update = (field: keyof BookingDetails, value: string) => {
@@ -35,80 +35,62 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
 
       <div className="space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
-          <div className="relative">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              required
-              type="text"
-              placeholder="Full Name"
-              value={details.name}
-              onChange={(e) => update("name", e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div className="relative">
-            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              required
-              type="tel"
-              placeholder="Phone Number"
-              value={details.phone}
-              onChange={(e) => update("phone", e.target.value)}
-              className={inputClass}
-            />
-          </div>
-        </div>
-
-        <div className="relative">
-          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={details.email}
-            onChange={(e) => update("email", e.target.value)}
-            className={inputClass}
-          />
-        </div>
-
-        <div className="relative">
-          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             required
             type="text"
-            placeholder="Service Address"
-            value={details.address}
-            onChange={(e) => update("address", e.target.value)}
+            placeholder="Full Name"
+            value={details.name}
+            onChange={(e) => update("name", e.target.value)}
+            className={inputClass}
+          />
+          <input
+            required
+            type="tel"
+            placeholder="Phone Number"
+            value={details.phone}
+            onChange={(e) => update("phone", e.target.value)}
             className={inputClass}
           />
         </div>
 
-        <div className="relative">
-          <Car className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <select
-            required
-            value={details.vehicleType}
-            onChange={(e) => update("vehicleType", e.target.value)}
-            className={`${inputClass} appearance-none`}
-          >
-            <option value="" disabled>Vehicle Type</option>
-            <option>Sedan</option>
-            <option>SUV</option>
-            <option>Truck</option>
-            <option>Van</option>
-            <option>Coupe</option>
-          </select>
-        </div>
+        <input
+          type="email"
+          placeholder="Email Address"
+          value={details.email}
+          onChange={(e) => update("email", e.target.value)}
+          className={inputClass}
+        />
 
-        <div className="relative">
-          <FileText className="absolute left-4 top-4 w-4 h-4 text-muted-foreground" />
-          <textarea
-            rows={3}
-            placeholder="Additional notes (optional)"
-            value={details.notes}
-            onChange={(e) => update("notes", e.target.value)}
-            className={`${inputClass} resize-none`}
-          />
-        </div>
+        <input
+          required
+          type="text"
+          placeholder="Service Address"
+          value={details.address}
+          onChange={(e) => update("address", e.target.value)}
+          className={inputClass}
+        />
+
+        <select
+          required
+          value={details.vehicleType}
+          onChange={(e) => update("vehicleType", e.target.value)}
+          className={`${inputClass} appearance-none`}
+        >
+          <option value="" disabled>Vehicle Type</option>
+          <option>Sedan</option>
+          <option>SUV</option>
+          <option>Truck</option>
+          <option>Van</option>
+          <option>Coupe</option>
+        </select>
+
+        <textarea
+          rows={3}
+          placeholder="Additional notes (optional)"
+          value={details.notes}
+          onChange={(e) => update("notes", e.target.value)}
+          className={`${inputClass} resize-none`}
+        />
       </div>
     </div>
   );
