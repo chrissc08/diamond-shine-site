@@ -149,18 +149,18 @@ function generateMockBookings(): MockBooking[] {
     return d.toISOString().split("T")[0];
   };
 
-  // Day +2: Diamond Full Detail at 9am (blocks entire day)
-  mocks.push({ date: getFutureDate(2), slotId: "9am", packageId: "diamond" });
+  // Day +4: Diamond Full Detail at 9am (blocks entire day)
+  mocks.push({ date: getFutureDate(4), slotId: "9am", packageId: "diamond" });
 
-  // Day +3: Interior Restoration at 9am (only small jobs allowed after)
-  mocks.push({ date: getFutureDate(3), slotId: "9am", packageId: "interior" });
+  // Day +8: Interior Restoration at 9am (only small jobs allowed after)
+  mocks.push({ date: getFutureDate(8), slotId: "9am", packageId: "interior" });
 
-  // Day +5: Two Complete Resets (only signature allowed after)
-  mocks.push({ date: getFutureDate(5), slotId: "9am", packageId: "complete" });
-  mocks.push({ date: getFutureDate(5), slotId: "1130am", packageId: "complete" });
+  // Day +10: Two Complete Resets (only signature allowed after)
+  mocks.push({ date: getFutureDate(10), slotId: "9am", packageId: "complete" });
+  mocks.push({ date: getFutureDate(10), slotId: "1130am", packageId: "complete" });
 
-  // Day +7: One booking, mostly open
-  mocks.push({ date: getFutureDate(7), slotId: "9am", packageId: "signature" });
+  // Day +14: One booking, mostly open
+  mocks.push({ date: getFutureDate(14), slotId: "9am", packageId: "signature" });
 
   return mocks;
 }
