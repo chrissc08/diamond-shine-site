@@ -1,14 +1,16 @@
 import { packages, timeSlots, addOns as addOnData } from "./bookingData";
-import { Clock, Sparkles } from "lucide-react";
+import { Clock, Sparkles, CalendarDays } from "lucide-react";
+import { format } from "date-fns";
 
 interface BookingSummaryProps {
   packageId: string | null;
+  selectedDate: Date | undefined;
   timeSlotId: string | null;
   selectedAddOns: string[];
   step: number;
 }
 
-const BookingSummary = ({ packageId, timeSlotId, selectedAddOns, step }: BookingSummaryProps) => {
+const BookingSummary = ({ packageId, selectedDate, timeSlotId, selectedAddOns, step }: BookingSummaryProps) => {
   const pkg = packages.find((p) => p.id === packageId);
   const slot = timeSlots.find((s) => s.id === timeSlotId);
   const addOns = addOnData.filter((a) => selectedAddOns.includes(a.id));
@@ -28,14 +30,32 @@ const BookingSummary = ({ packageId, timeSlotId, selectedAddOns, step }: Booking
           <span className="font-display font-semibold text-right max-w-[180px] leading-tight">{pkg.name}</span>
         </div>
 
-        {slot && step >= 2 && (
+        {selectedDate && step >= 2 && (
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Date</span>
+            <span className="font-display font-semibold flex items-center gap-1.5">
+              <CalendarDays className="w-3 h-3 text-primary" />
+              {format(selectedDate, "EEE, MMM d")}
+            </span>
+          </div>
+        )}
+
+        {slot && step >= 3 && (
           <div className="flex justify-between">
             <span className="text-muted-foreground">Time</span>
             <span className="font-display font-semibold">{slot.time}</span>
           </div>
         )}
 
-        {addOns.length > 0 && step >= 3 && (
+        {selectedDate && slot && step >= 3 && (
+          <div className="px-3 py-2 rounded-lg bg-primary/[0.04] border border-primary/10 text-xs text-muted-foreground">
+            <span className="text-foreground font-semibold">
+              {format(selectedDate, "EEEE, MMMM d")} at {slot.time}
+            </span>
+          </div>
+        )}
+
+        {addOns.length > 0 && step >= 4 && (
           <div>
             <span className="text-muted-foreground text-xs block mb-1.5">Add-ons</span>
             {addOns.map((a) => (

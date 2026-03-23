@@ -3,12 +3,13 @@ import { useScrollReveal } from "../useScrollReveal";
 import { Send, ArrowLeft, ArrowRight } from "lucide-react";
 import StepIndicator from "./StepIndicator";
 import PackageStep from "./PackageStep";
+import DateStep from "./DateStep";
 import TimeSlotStep from "./TimeSlotStep";
 import AddOnsStep from "./AddOnsStep";
 import DetailsStep, { type BookingDetails } from "./DetailsStep";
 import ConfirmStep from "./ConfirmStep";
 import BookingSummary from "./BookingSummary";
-import { getAllowedSlots } from "./bookingData";
+import { getSlotAvailability, packages } from "./bookingData";
 
 const BookingSection = () => {
   const { ref, visible } = useScrollReveal();
@@ -16,6 +17,7 @@ const BookingSection = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [details, setDetails] = useState<BookingDetails>({
@@ -27,11 +29,22 @@ const BookingSection = () => {
     notes: "",
   });
 
+  const selectedDateStr = selectedDate ? selectedDate.toISOString().split("T")[0] : "";
+
   const handlePackageSelect = useCallback((id: string) => {
     setSelectedPackage(id);
-    // Reset slot if no longer allowed
-    const allowed = getAllowedSlots(id);
-    setSelectedSlot((prev) => (prev && allowed.includes(prev) ? prev : null));
+    // Reset slot if it's no longer valid for the new package + date combo
+    setSelectedSlot((prev) => {
+      if (!prev || !selectedDateStr) return null;
+      const avail = getSlotAvailability(selectedDateStr, id, prev);
+      return avail.allowed ? prev : null;
+    });
+  }, [selectedDateStr]);
+
+  const handleDateSelect = useCallback((date: Date | undefined) => {
+    setSelectedDate(date);
+    // Reset time slot when date changes — availability may differ
+    setSelectedSlot(null);
   }, []);
 
   const handleAddOnToggle = useCallback((id: string) => {
@@ -43,16 +56,17 @@ const BookingSection = () => {
   const canProceed = () => {
     switch (step) {
       case 0: return !!selectedPackage;
-      case 1: return !!selectedSlot;
-      case 2: return true; // add-ons optional
-      case 3: return details.name && details.phone && details.address && details.vehicleType;
-      case 4: return true;
+      case 1: return !!selectedDate;
+      case 2: return !!selectedSlot;
+      case 3: return true; // add-ons optional
+      case 4: return !!(details.name && details.phone && details.address && details.vehicleType);
+      case 5: return true;
       default: return false;
     }
   };
 
   const next = () => {
-    if (step < 4) setStep(step + 1);
+    if (step < 5) setStep(step + 1);
     else {
       setSubmitted(true);
     }
@@ -61,6 +75,8 @@ const BookingSection = () => {
   const back = () => {
     if (step > 0) setStep(step - 1);
   };
+
+  const pkg = packages.find((p) => p.id === selectedPackage);
 
   if (submitted) {
     return (
@@ -79,6 +95,7 @@ const BookingSection = () => {
                 setSubmitted(false);
                 setStep(0);
                 setSelectedPackage(null);
+                setSelectedDate(undefined);
                 setSelectedSlot(null);
                 setSelectedAddOns([]);
                 setDetails({ name: "", phone: "", email: "", address: "", vehicleType: "", notes: "" });
@@ -92,6 +109,8 @@ const BookingSection = () => {
       </section>
     );
   }
+
+  const showSidebar = step >= 1;
 
   return (
     <section id="booking" className="py-24 lg:py-32 bg-deep-blue/30">
@@ -111,7 +130,7 @@ const BookingSection = () => {
         <div className={`mx-auto ${step === 0 ? "max-w-4xl" : "max-w-3xl"} transition-all duration-300`}>
           <StepIndicator current={step} />
 
-          <div className={step === 0 ? "" : "grid lg:grid-cols-[1fr_280px] gap-6"}>
+          <div className={showSidebar ? "grid lg:grid-cols-[1fr_280px] gap-6" : ""}>
             {/* Main step content */}
             <div
               key={step}
@@ -120,22 +139,31 @@ const BookingSection = () => {
               {step === 0 && (
                 <PackageStep selected={selectedPackage} onSelect={handlePackageSelect} />
               )}
-              {step === 1 && selectedPackage && (
+              {step === 1 && (
+                <DateStep
+                  selected={selectedDate}
+                  onSelect={handleDateSelect}
+                  packageName={pkg?.name}
+                />
+              )}
+              {step === 2 && selectedPackage && (
                 <TimeSlotStep
                   packageId={selectedPackage}
+                  dateStr={selectedDateStr}
                   selected={selectedSlot}
                   onSelect={setSelectedSlot}
                 />
               )}
-              {step === 2 && (
+              {step === 3 && (
                 <AddOnsStep selected={selectedAddOns} onToggle={handleAddOnToggle} />
               )}
-              {step === 3 && (
+              {step === 4 && (
                 <DetailsStep details={details} onChange={setDetails} />
               )}
-              {step === 4 && selectedPackage && selectedSlot && (
+              {step === 5 && selectedPackage && selectedSlot && selectedDate && (
                 <ConfirmStep
                   packageId={selectedPackage}
+                  selectedDate={selectedDate}
                   timeSlotId={selectedSlot}
                   selectedAddOns={selectedAddOns}
                   details={details}
@@ -144,20 +172,23 @@ const BookingSection = () => {
             </div>
 
             {/* Sidebar summary */}
-            <div className="hidden lg:block">
-              <div className="sticky top-24">
-                <BookingSummary
-                  packageId={selectedPackage}
-                  timeSlotId={selectedSlot}
-                  selectedAddOns={selectedAddOns}
-                  step={step}
-                />
+            {showSidebar && (
+              <div className="hidden lg:block">
+                <div className="sticky top-24">
+                  <BookingSummary
+                    packageId={selectedPackage}
+                    selectedDate={selectedDate}
+                    timeSlotId={selectedSlot}
+                    selectedAddOns={selectedAddOns}
+                    step={step}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-8 lg:pr-[calc(280px+1.5rem)]">
+          <div className={`flex items-center justify-between mt-8 ${showSidebar ? "lg:pr-[calc(280px+1.5rem)]" : ""}`}>
             {step > 0 ? (
               <button
                 type="button"
@@ -180,7 +211,7 @@ const BookingSection = () => {
                   : "bg-muted text-muted-foreground cursor-not-allowed"
               }`}
             >
-              {step === 4 ? (
+              {step === 5 ? (
                 <>
                   <Send className="w-4 h-4" />
                   Submit Request
