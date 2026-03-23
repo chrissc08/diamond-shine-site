@@ -108,10 +108,10 @@ const BookingSection = () => {
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto">
+        <div className={`mx-auto ${step === 0 ? "max-w-4xl" : "max-w-3xl"} transition-all duration-300`}>
           <StepIndicator current={step} />
 
-          <div className="grid lg:grid-cols-[1fr_280px] gap-6">
+          <div className={step === 0 ? "" : "grid lg:grid-cols-[1fr_280px] gap-6"}>
             {/* Main step content */}
             <div
               key={step}

@@ -18,7 +18,7 @@ const PackageStep = ({ selected, onSelect }: PackageStepProps) => {
         </p>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
         {packages.map((pkg) => (
           <PackageCard
             key={pkg.id}
@@ -47,7 +47,7 @@ const PackageCard = ({
     <button
       type="button"
       onClick={onSelect}
-      className={`relative flex flex-col text-left rounded-xl p-5 lg:p-6 border transition-all duration-300 active:scale-[0.97] cursor-pointer group ${
+      className={`relative flex flex-col text-left rounded-xl p-6 lg:p-7 border transition-all duration-300 active:scale-[0.97] cursor-pointer group h-full ${
         isSelected
           ? isDiamond
             ? "border-primary bg-primary/[0.06] box-glow-strong"
@@ -62,7 +62,7 @@ const PackageCard = ({
       )}
 
       <div className="flex items-start justify-between gap-2 mb-1">
-        <h4 className="font-display text-sm font-bold tracking-wide leading-tight">
+        <h4 className="font-display text-base font-bold tracking-wide leading-tight">
           {pkg.name}
         </h4>
         <div
@@ -81,7 +81,7 @@ const PackageCard = ({
         {pkg.time}
       </div>
 
-      <ul className="space-y-1.5 mb-4 flex-1">
+      <ul className="space-y-2 mb-5 flex-1">
         {pkg.features.slice(0, 3).map((f) => (
           <li key={f} className="flex items-start gap-2 text-xs text-secondary-foreground">
             <Check className="w-3 h-3 text-primary mt-0.5 shrink-0" />
@@ -95,7 +95,7 @@ const PackageCard = ({
         )}
       </ul>
 
-      <div className="border-t border-border pt-3 flex justify-between text-xs">
+      <div className="border-t border-border pt-4 flex justify-between text-sm">
         <div>
           <span className="text-muted-foreground">Sedan </span>
           <span className="font-display font-bold text-foreground">{pkg.sedanPrice}</span>
