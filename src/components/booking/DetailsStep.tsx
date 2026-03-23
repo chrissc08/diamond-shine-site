@@ -47,7 +47,7 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
             />
           </div>
           <div className="relative">
-            <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               required
               type="tel"
