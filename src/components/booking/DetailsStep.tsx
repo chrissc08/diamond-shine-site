@@ -100,7 +100,7 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
         </div>
 
         <div className="relative">
-          <FileText className="absolute left-3.5 top-3.5 w-4 h-4 text-muted-foreground" />
+          <FileText className="absolute left-4 top-4 w-4 h-4 text-muted-foreground" />
           <textarea
             rows={3}
             placeholder="Additional notes (optional)"
