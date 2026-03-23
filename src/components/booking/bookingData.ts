@@ -23,6 +23,12 @@ export interface AddOn {
   icon: string;
 }
 
+export interface MockBooking {
+  date: string; // "YYYY-MM-DD"
+  slotId: string;
+  packageId: string;
+}
+
 export const packages: BookingPackage[] = [
   {
     id: "signature",
@@ -103,6 +109,7 @@ export const addOns: AddOn[] = [
   { id: "stain", name: "Stain Treatment", price: "$25–100", icon: "droplets" },
 ];
 
+// Package-based slot restrictions (which slots a package CAN use)
 export function getAllowedSlots(packageId: string): string[] {
   switch (packageId) {
     case "diamond":
@@ -128,3 +135,86 @@ export function getSlotMessage(packageId: string): string | null {
       return null;
   }
 }
+
+// ── Mock existing bookings (simulate real schedule) ──
+// Generate mock bookings relative to today so they're always relevant
+function generateMockBookings(): MockBooking[] {
+  const today = new Date();
+  const mocks: MockBooking[] = [];
+
+  // Helper to get a future weekday date string
+  const getFutureDate = (daysAhead: number): string => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + daysAhead);
+    return d.toISOString().split("T")[0];
+  };
+
+  // Day +2: Diamond Full Detail at 9am (blocks entire day)
+  mocks.push({ date: getFutureDate(2), slotId: "9am", packageId: "diamond" });
+
+  // Day +3: Interior Restoration at 9am (only small jobs allowed after)
+  mocks.push({ date: getFutureDate(3), slotId: "9am", packageId: "interior" });
+
+  // Day +5: Two Complete Resets (only signature allowed after)
+  mocks.push({ date: getFutureDate(5), slotId: "9am", packageId: "complete" });
+  mocks.push({ date: getFutureDate(5), slotId: "1130am", packageId: "complete" });
+
+  // Day +7: One booking, mostly open
+  mocks.push({ date: getFutureDate(7), slotId: "9am", packageId: "signature" });
+
+  return mocks;
+}
+
+export const mockBookings: MockBooking[] = generateMockBookings();
+
+export interface SlotAvailability {
+  allowed: boolean;
+  reason?: string;
+}
+
+/**
+ * Given existing bookings for a date, a selected package, and a slot,
+ * determine if that slot is available and why not if it isn't.
+ */
+export function getSlotAvailability(
+  dateStr: string,
+  packageId: string,
+  slotId: string
+): SlotAvailability {
+  // 1. Check package-level restriction first
+  const packageAllowed = getAllowedSlots(packageId);
+  if (!packageAllowed.includes(slotId)) {
+    return { allowed: false, reason: "Not available for this package" };
+  }
+
+  const dayBookings = mockBookings.filter((b) => b.date === dateStr);
+
+  // 2. If a Diamond Full Detail is booked that day → block everything
+  const hasDiamond = dayBookings.some((b) => b.packageId === "diamond");
+  if (hasDiamond) {
+    return { allowed: false, reason: "Fully booked — large detail scheduled" };
+  }
+
+  // 3. If this specific slot is already taken
+  const slotTaken = dayBookings.some((b) => b.slotId === slotId);
+  if (slotTaken) {
+    return { allowed: false, reason: "This time is already booked" };
+  }
+
+  // 4. If an Interior Restoration is booked → only allow Signature after
+  const hasInterior = dayBookings.some((b) => b.packageId === "interior");
+  if (hasInterior && packageId !== "signature") {
+    return { allowed: false, reason: "Only small services available — large detail in progress" };
+  }
+
+  // 5. If 2+ Complete Resets booked → only allow Signature
+  const completeCount = dayBookings.filter((b) => b.packageId === "complete").length;
+  if (completeCount >= 2 && packageId !== "signature") {
+    return { allowed: false, reason: "Only quick services available — schedule is tight" };
+  }
+
+  return { allowed: true };
+}
+
+// Max booking window in days
+export const BOOKING_WINDOW_DAYS = 21;

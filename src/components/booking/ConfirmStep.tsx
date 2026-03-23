@@ -1,15 +1,17 @@
 import { packages, timeSlots, addOns as addOnData } from "./bookingData";
-import { Check, Clock, MapPin, Car, User } from "lucide-react";
+import { Check, Clock, MapPin, Car, User, CalendarDays } from "lucide-react";
+import { format } from "date-fns";
 import type { BookingDetails } from "./DetailsStep";
 
 interface ConfirmStepProps {
   packageId: string;
+  selectedDate: Date;
   timeSlotId: string;
   selectedAddOns: string[];
   details: BookingDetails;
 }
 
-const ConfirmStep = ({ packageId, timeSlotId, selectedAddOns, details }: ConfirmStepProps) => {
+const ConfirmStep = ({ packageId, selectedDate, timeSlotId, selectedAddOns, details }: ConfirmStepProps) => {
   const pkg = packages.find((p) => p.id === packageId);
   const slot = timeSlots.find((s) => s.id === timeSlotId);
   const addOns = addOnData.filter((a) => selectedAddOns.includes(a.id));
@@ -19,7 +21,8 @@ const ConfirmStep = ({ packageId, timeSlotId, selectedAddOns, details }: Confirm
   const rows = [
     { icon: User, label: details.name, sub: details.phone },
     { icon: MapPin, label: details.address, sub: details.vehicleType },
-    { icon: Car, label: pkg.name, sub: `${slot.time} · ${pkg.time}` },
+    { icon: CalendarDays, label: format(selectedDate, "EEEE, MMMM d, yyyy"), sub: slot.time },
+    { icon: Car, label: pkg.name, sub: pkg.time },
   ];
 
   return (
