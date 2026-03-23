@@ -81,7 +81,7 @@ const PackageCard = ({
         {pkg.time}
       </div>
 
-      <ul className="space-y-1.5 mb-4 flex-1">
+      <ul className="space-y-2 mb-5 flex-1">
         {pkg.features.slice(0, 3).map((f) => (
           <li key={f} className="flex items-start gap-2 text-xs text-secondary-foreground">
             <Check className="w-3 h-3 text-primary mt-0.5 shrink-0" />
