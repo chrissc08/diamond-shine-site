@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { ImagePlus, X } from "lucide-react";
 
 export interface BookingDetails {
   name: string;
@@ -7,6 +8,7 @@ export interface BookingDetails {
   address: string;
   vehicleType: string;
   notes: string;
+  images: File[];
 }
 
 interface DetailsStepProps {
@@ -18,8 +20,35 @@ const inputClass =
   "w-full px-4 py-3.5 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all duration-200";
 
 const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previews, setPreviews] = useState<string[]>([]);
+
   const update = (field: keyof BookingDetails, value: string) => {
     onChange({ ...details, [field]: value });
+  };
+
+  const handleFiles = (files: FileList | null) => {
+    if (!files) return;
+    const newFiles = Array.from(files).slice(0, 5 - details.images.length);
+    if (newFiles.length === 0) return;
+
+    const updated = [...details.images, ...newFiles];
+    onChange({ ...details, images: updated });
+
+    newFiles.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviews((prev) => [...prev, e.target?.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeImage = (index: number) => {
+    const updatedImages = details.images.filter((_, i) => i !== index);
+    const updatedPreviews = previews.filter((_, i) => i !== index);
+    onChange({ ...details, images: updatedImages });
+    setPreviews(updatedPreviews);
   };
 
   return (
@@ -91,6 +120,52 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
           onChange={(e) => update("notes", e.target.value)}
           className={`${inputClass} resize-none`}
         />
+
+        {/* Photo Upload */}
+        <div className="pt-2">
+          <p className="text-sm text-muted-foreground mb-3">
+            Upload photos of your vehicle for a more accurate quote
+            <span className="text-muted-foreground/60 ml-1">(optional, up to 5)</span>
+          </p>
+
+          <div className="flex flex-wrap gap-3">
+            {previews.map((src, i) => (
+              <div
+                key={i}
+                className="relative w-20 h-20 rounded-lg overflow-hidden border border-border group"
+              >
+                <img src={src} alt={`Upload ${i + 1}`} className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeImage(i)}
+                  className="absolute inset-0 bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                >
+                  <X className="w-4 h-4 text-foreground" />
+                </button>
+              </div>
+            ))}
+
+            {details.images.length < 5 && (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-20 h-20 rounded-lg border border-dashed border-border hover:border-primary/40 bg-card/50 flex flex-col items-center justify-center gap-1 transition-colors text-muted-foreground hover:text-primary/70"
+              >
+                <ImagePlus className="w-5 h-5" />
+                <span className="text-[10px]">Add</span>
+              </button>
+            )}
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={(e) => handleFiles(e.target.files)}
+          />
+        </div>
       </div>
     </div>
   );
