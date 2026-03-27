@@ -27,6 +27,7 @@ const BookingSection = () => {
     address: "",
     vehicleType: "",
     notes: "",
+    images: [],
   });
 
   const selectedDateStr = selectedDate ? selectedDate.toISOString().split("T")[0] : "";
