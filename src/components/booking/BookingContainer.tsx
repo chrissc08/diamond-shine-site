@@ -27,6 +27,7 @@ const BookingSection = () => {
     address: "",
     vehicleType: "",
     notes: "",
+    images: [],
   });
 
   const selectedDateStr = selectedDate ? selectedDate.toISOString().split("T")[0] : "";
@@ -98,7 +99,7 @@ const BookingSection = () => {
                 setSelectedDate(undefined);
                 setSelectedSlot(null);
                 setSelectedAddOns([]);
-                setDetails({ name: "", phone: "", email: "", address: "", vehicleType: "", notes: "" });
+                setDetails({ name: "", phone: "", email: "", address: "", vehicleType: "", notes: "", images: [] });
               }}
               className="text-primary text-sm font-display uppercase tracking-wider hover:underline active:scale-[0.97]"
             >
