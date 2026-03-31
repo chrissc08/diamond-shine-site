@@ -31,66 +31,68 @@ export interface MockBooking {
 
 export const packages: BookingPackage[] = [
   {
-    id: "signature",
-    name: "Signature Maintenance Detail",
-    subtitle: "Best for regularly maintained vehicles",
+    id: "essential",
+    name: "Essential Maintenance Detail",
+    subtitle: "Best for vehicles already in good condition",
     features: [
-      "Foam Wash + Hand Wash",
+      "Foam hand wash + detailed hand wash",
       "Wheels cleaned + tire shine applied",
-      "Streak-free window cleaning",
       "Light interior vacuum + wipe down",
+      "Streak-free window cleaning",
     ],
     time: "1–1.5 hrs",
-    sedanPrice: "$80–120",
-    suvPrice: "$100–140",
-    tagline: "Fast, consistent clean for already-maintained cars",
+    sedanPrice: "$90–120",
+    suvPrice: "$110–140",
+    tagline: "A consistent, high-quality maintenance clean",
   },
   {
-    id: "complete",
-    name: "Complete Reset Detail",
+    id: "signature",
+    name: "Signature Reset Detail",
     popular: true,
-    subtitle: "A full refresh — inside & out",
+    subtitle: "A complete refresh — inside & out",
     features: [
-      "Deep Foam Pre-Wash + Detailed Hand Wash",
+      "Deep foam pre-wash + detailed hand wash",
       "Deep wheel cleaning (faces + barrels)",
-      "Spray protection (ceramic or sealant boost)",
       "Full interior vacuum + wipe down",
+      "Light stain spot treatment",
+      "Spray protection (ceramic or sealant boost)",
       "Streak-free window cleaning",
     ],
     time: "2–3 hrs",
-    sedanPrice: "$150–200",
-    suvPrice: "$180–240",
+    sedanPrice: "$160–220",
+    suvPrice: "$190–260",
     tagline: "The perfect balance of clean & protection",
   },
   {
     id: "interior",
-    name: "Interior Restoration Detail",
+    name: "Interior Revival Detail",
     subtitle: "For heavily used or neglected interiors",
     features: [
       "Full vacuum + compressed air blowout",
-      "Pet hair removal + steam cleaning",
-      "Shampoo + wet extraction",
+      "Pet hair removal",
+      "Steam cleaning",
+      "Shampoo + water extraction",
       "Stain & odor treatment",
       "Deep plastics cleaning + UV protection",
     ],
     time: "3–4 hrs",
-    sedanPrice: "$220–300",
-    suvPrice: "$260–350",
+    sedanPrice: "$240–320",
+    suvPrice: "$280–360",
     tagline: "Brings your interior back to life",
   },
   {
     id: "diamond",
-    name: "Diamond Full Detail",
-    subtitle: "The ultimate transformation",
+    name: "Ultimate Detail Package",
+    subtitle: "The most complete detail offered",
     features: [
-      "Everything in Complete Reset + Interior Restoration",
-      "Iron decontamination + tar removal",
-      "Long-lasting spray protection",
+      "Everything in Signature Reset + Interior Revival",
+      "Iron decontamination + tar removal (if needed)",
+      "Long-lasting exterior protection",
       "Showroom-level finish",
     ],
     time: "4–5 hrs",
-    sedanPrice: "$300–450",
-    suvPrice: "$350–550",
+    sedanPrice: "$320–450",
+    suvPrice: "$380–550",
     tagline: "Showroom-level results, inside and out",
   },
 ];
@@ -106,8 +108,8 @@ export function getServiceDuration(packageId: string): number {
   switch (packageId) {
     case "diamond": return 5;
     case "interior": return 4;
-    case "complete": return 2;
-    case "signature": return 1;
+    case "signature": return 2;
+    case "essential": return 1;
     default: return 2;
   }
 }
@@ -162,9 +164,9 @@ export function getAllowedSlots(packageId: string): string[] {
       return ["9am"];           // 5h — only fits at 9 AM
     case "interior":
       return ["9am"];           // 4h — only fits at 9 AM
-    case "complete":
-      return ["1230pm", "3pm"]; // 2h — NOT allowed at 9 AM (priority rule)
     case "signature":
+      return ["1230pm", "3pm"]; // 2h — NOT allowed at 9 AM (priority rule)
+    case "essential":
       return ["1230pm", "3pm"]; // 1h — NOT allowed at 9 AM (priority rule)
     default:
       return [];
@@ -174,12 +176,12 @@ export function getAllowedSlots(packageId: string): string[] {
 export function getSlotMessage(packageId: string): string | null {
   switch (packageId) {
     case "interior":
-      return "This service requires a morning appointment due to its duration (4 hours + 30min buffer)";
+      return "Interior Revival requires a morning appointment due to its duration (4 hours + 30min buffer)";
     case "diamond":
-      return "Diamond Full Detail requires the 9:00 AM slot (5 hours + 30min buffer)";
-    case "complete":
-      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
+      return "Ultimate Detail Package requires the 9:00 AM slot (5 hours + 30min buffer)";
     case "signature":
+      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
+    case "essential":
       return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
     default:
       return null;
@@ -205,11 +207,11 @@ function generateMockBookings(): MockBooking[] {
   // Day +8: Interior Restoration at 9am (end time 1:30 PM → blocks 12:30, 3 PM open)
   mocks.push({ date: getFutureDate(8), slotId: "9am", packageId: "interior" });
 
-  // Day +10: Complete Reset at 12:30pm (end time 3:00 PM → 3 PM slot available)
-  mocks.push({ date: getFutureDate(10), slotId: "1230pm", packageId: "complete" });
+  // Day +10: Signature Reset at 12:30pm (end time 3:00 PM → 3 PM slot available)
+  mocks.push({ date: getFutureDate(10), slotId: "1230pm", packageId: "signature" });
 
-  // Day +14: Signature at 12:30pm, mostly open
-  mocks.push({ date: getFutureDate(14), slotId: "1230pm", packageId: "signature" });
+  // Day +14: Essential at 12:30pm, mostly open
+  mocks.push({ date: getFutureDate(14), slotId: "1230pm", packageId: "essential" });
 
   return mocks;
 }
