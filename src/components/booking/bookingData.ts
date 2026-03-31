@@ -96,11 +96,44 @@ export const packages: BookingPackage[] = [
 ];
 
 export const timeSlots: TimeSlot[] = [
-  { id: "9am", time: "9:00 AM", label: "Premium Slot" },
-  { id: "1130am", time: "11:30 AM", label: "Mid Slot" },
-  { id: "130pm", time: "1:30 PM", label: "Flex Slot" },
-  { id: "3pm", time: "3:00 PM", label: "Quick Slot" },
+  { id: "9am", time: "9:00 AM", label: "Morning" },
+  { id: "1230pm", time: "12:30 PM", label: "Midday" },
+  { id: "3pm", time: "3:00 PM", label: "Afternoon" },
 ];
+
+// Estimated duration in hours per package (upper bound + 30min travel buffer)
+export function getPackageDuration(packageId: string): number {
+  switch (packageId) {
+    case "diamond": return 6.5;  // 6hrs + 30min buffer
+    case "interior": return 5.5; // 5hrs + 30min buffer
+    case "complete": return 3.5; // 3hrs + 30min buffer
+    case "signature": return 2;  // 1.5hrs + 30min buffer
+    default: return 2;
+  }
+}
+
+// Slot start times in hours from midnight (for duration math)
+const slotStartHours: Record<string, number> = {
+  "9am": 9,
+  "1230pm": 12.5,
+  "3pm": 15,
+};
+
+/** Returns which slot IDs would be blocked by a booking at the given slot */
+export function getBlockedSlots(slotId: string, packageId: string): string[] {
+  const start = slotStartHours[slotId];
+  if (start === undefined) return [];
+  const duration = getPackageDuration(packageId);
+  const endTime = start + duration;
+
+  return timeSlots
+    .filter((s) => {
+      const sStart = slotStartHours[s.id];
+      // Block any slot that starts before the job would finish
+      return sStart > start && sStart < endTime;
+    })
+    .map((s) => s.id);
+}
 
 export const addOns: AddOn[] = [
   { id: "ceramic", name: "Spray Protection (Ceramic Boost)", price: "$20–50", icon: "shield" },
@@ -117,9 +150,9 @@ export function getAllowedSlots(packageId: string): string[] {
     case "interior":
       return ["9am"];
     case "complete":
-      return ["9am", "1130am", "130pm"];
+      return ["9am", "1230pm"];
     case "signature":
-      return ["9am", "1130am", "130pm", "3pm"];
+      return ["9am", "1230pm", "3pm"];
     default:
       return [];
   }
@@ -155,9 +188,8 @@ function generateMockBookings(): MockBooking[] {
   // Day +8: Interior Restoration at 9am (only small jobs allowed after)
   mocks.push({ date: getFutureDate(8), slotId: "9am", packageId: "interior" });
 
-  // Day +10: Two Complete Resets (only signature allowed after)
+  // Day +10: Complete Reset at 9am (dynamically blocks 12:30 via duration)
   mocks.push({ date: getFutureDate(10), slotId: "9am", packageId: "complete" });
-  mocks.push({ date: getFutureDate(10), slotId: "1130am", packageId: "complete" });
 
   // Day +14: One booking, mostly open
   mocks.push({ date: getFutureDate(14), slotId: "9am", packageId: "signature" });
@@ -201,16 +233,22 @@ export function getSlotAvailability(
     return { allowed: false, reason: "This time is already booked" };
   }
 
-  // 4. If an Interior Restoration is booked → only allow Signature after
-  const hasInterior = dayBookings.some((b) => b.packageId === "interior");
-  if (hasInterior && packageId !== "signature") {
-    return { allowed: false, reason: "Only small services available — large detail in progress" };
+  // 4. Dynamic duration-based blocking:
+  //    If an existing booking's duration would overlap into this slot, block it
+  for (const booking of dayBookings) {
+    const blocked = getBlockedSlots(booking.slotId, booking.packageId);
+    if (blocked.includes(slotId)) {
+      return { allowed: false, reason: "Unavailable — previous appointment still in progress" };
+    }
   }
 
-  // 5. If 2+ Complete Resets booked → only allow Signature
-  const completeCount = dayBookings.filter((b) => b.packageId === "complete").length;
-  if (completeCount >= 2 && packageId !== "signature") {
-    return { allowed: false, reason: "Only quick services available — schedule is tight" };
+  // 5. Check if the NEW booking's duration would overlap into already-taken slots
+  const wouldBlock = getBlockedSlots(slotId, packageId);
+  for (const blockedSlotId of wouldBlock) {
+    const conflict = dayBookings.some((b) => b.slotId === blockedSlotId);
+    if (conflict) {
+      return { allowed: false, reason: "Not enough time — overlaps with a later appointment" };
+    }
   }
 
   return { allowed: true };
