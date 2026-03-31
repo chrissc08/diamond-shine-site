@@ -108,8 +108,8 @@ export function getServiceDuration(packageId: string): number {
   switch (packageId) {
     case "diamond": return 5;
     case "interior": return 4;
-    case "complete": return 2;
-    case "signature": return 1;
+    case "signature": return 2;
+    case "essential": return 1;
     default: return 2;
   }
 }
