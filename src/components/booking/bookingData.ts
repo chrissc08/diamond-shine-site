@@ -268,8 +268,8 @@ export function getSlotAvailability(
   packageId: string,
   slotId: string
 ): SlotAvailability {
-  // 1. Package-level restriction (priority rule: 9 AM reserved for large services)
-  const packageAllowed = getAllowedSlots(packageId);
+  // 1. Package-level restriction (priority rule: 9 AM reserved for large services, with fallback)
+  const packageAllowed = getAllowedSlots(packageId, dateStr);
   if (!packageAllowed.includes(slotId)) {
     return { allowed: false, reason: "Not available for this package" };
   }
