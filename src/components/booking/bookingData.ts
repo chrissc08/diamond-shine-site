@@ -188,9 +188,8 @@ function generateMockBookings(): MockBooking[] {
   // Day +8: Interior Restoration at 9am (only small jobs allowed after)
   mocks.push({ date: getFutureDate(8), slotId: "9am", packageId: "interior" });
 
-  // Day +10: Two Complete Resets (only signature allowed after)
+  // Day +10: Complete Reset at 9am (dynamically blocks 12:30 via duration)
   mocks.push({ date: getFutureDate(10), slotId: "9am", packageId: "complete" });
-  mocks.push({ date: getFutureDate(10), slotId: "1130am", packageId: "complete" });
 
   // Day +14: One booking, mostly open
   mocks.push({ date: getFutureDate(14), slotId: "9am", packageId: "signature" });
