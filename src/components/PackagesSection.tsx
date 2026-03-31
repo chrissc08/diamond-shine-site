@@ -4,6 +4,7 @@ import { Star, Clock, Check } from "lucide-react";
 interface Package {
   name: string;
   popular?: boolean;
+  description: string;
   features: string[];
   time: string;
   sedanPrice: string;
@@ -16,6 +17,7 @@ const packages: Package[] = [
   {
     name: "Essential Maintenance Detail",
     subtitle: "Best for vehicles already in good condition",
+    description: "Keep your car looking sharp with a consistent, high-quality maintenance clean. Designed for vehicles that are already in good condition and need upkeep — not heavy restoration.",
     features: [
       "Foam hand wash + detailed hand wash",
       "Wheels cleaned + tire shine applied",
@@ -31,6 +33,7 @@ const packages: Package[] = [
     name: "Signature Reset Detail",
     popular: true,
     subtitle: "A complete refresh — inside & out",
+    description: "Our most popular package. A complete refresh inside and out that restores your vehicle's appearance and adds protection to keep it cleaner longer.",
     features: [
       "Deep foam pre-wash + detailed hand wash",
       "Deep wheel cleaning (faces + barrels)",
@@ -47,6 +50,7 @@ const packages: Package[] = [
   {
     name: "Interior Revival Detail",
     subtitle: "For heavily used or neglected interiors",
+    description: "A full interior transformation for heavily used or neglected vehicles. Removes deep dirt, stains, odors, and pet hair to restore your cabin.",
     features: [
       "Full vacuum + compressed air blowout",
       "Pet hair removal",
@@ -63,6 +67,7 @@ const packages: Package[] = [
   {
     name: "Ultimate Detail Package",
     subtitle: "The most complete detail offered",
+    description: "The most complete detail offered. A full interior and exterior transformation designed to deliver showroom-level results with long-lasting protection.",
     features: [
       "Everything in Signature Reset + Interior Revival",
       "Iron decontamination + tar removal (if needed)",
@@ -96,8 +101,9 @@ const PackageCard = ({ pkg, index }: { pkg: Package; index: number }) => {
         {pkg.name}
       </h3>
       <p className="text-muted-foreground text-sm mb-1">{pkg.subtitle}</p>
+      <p className="text-muted-foreground/80 text-xs leading-relaxed mb-3">{pkg.description}</p>
 
-      <div className="flex items-center gap-2 text-muted-foreground text-sm mb-5">
+      <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
         <Clock className="w-3.5 h-3.5" />
         {pkg.time}
       </div>
