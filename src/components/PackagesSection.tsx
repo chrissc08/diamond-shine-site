@@ -4,6 +4,7 @@ import { Star, Clock, Check } from "lucide-react";
 interface Package {
   name: string;
   popular?: boolean;
+  description: string;
   features: string[];
   time: string;
   sedanPrice: string;
