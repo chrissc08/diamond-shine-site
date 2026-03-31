@@ -150,9 +150,9 @@ export function getAllowedSlots(packageId: string): string[] {
     case "interior":
       return ["9am"];
     case "complete":
-      return ["9am", "1130am", "130pm"];
+      return ["9am", "1230pm"];
     case "signature":
-      return ["9am", "1130am", "130pm", "3pm"];
+      return ["9am", "1230pm", "3pm"];
     default:
       return [];
   }
