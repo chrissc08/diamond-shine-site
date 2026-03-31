@@ -199,17 +199,17 @@ function generateMockBookings(): MockBooking[] {
     return d.toISOString().split("T")[0];
   };
 
-  // Day +4: Diamond Full Detail at 9am (blocks entire day)
+  // Day +4: Diamond Full Detail at 9am (blocks 12:30, end time 2:30 PM → 3 PM open)
   mocks.push({ date: getFutureDate(4), slotId: "9am", packageId: "diamond" });
 
-  // Day +8: Interior Restoration at 9am (only small jobs allowed after)
+  // Day +8: Interior Restoration at 9am (end time 1:30 PM → blocks 12:30, 3 PM open)
   mocks.push({ date: getFutureDate(8), slotId: "9am", packageId: "interior" });
 
-  // Day +10: Complete Reset at 9am (dynamically blocks 12:30 via duration)
-  mocks.push({ date: getFutureDate(10), slotId: "9am", packageId: "complete" });
+  // Day +10: Complete Reset at 12:30pm (end time 3:00 PM → 3 PM slot available)
+  mocks.push({ date: getFutureDate(10), slotId: "1230pm", packageId: "complete" });
 
-  // Day +14: One booking, mostly open
-  mocks.push({ date: getFutureDate(14), slotId: "9am", packageId: "signature" });
+  // Day +14: Signature at 12:30pm, mostly open
+  mocks.push({ date: getFutureDate(14), slotId: "1230pm", packageId: "signature" });
 
   return mocks;
 }
