@@ -30,8 +30,8 @@ const FooterSection = () => {
             <a href="tel:8457200963" className="flex items-center gap-2 text-primary text-sm hover:text-primary/80 transition-colors w-fit">
               <Phone className="w-4 h-4" /> (845) 720-0963
             </a>
-            <a href="mailto:info@diamondtouchdetailing.com" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
-              <Mail className="w-4 h-4" /> info@diamondtouchdetailing.com
+            <a href="mailto:diamondtouchdetailers@gmail.com" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
+              <Mail className="w-4 h-4" /> diamondtouchdetailers@gmail.com
             </a>
             <div className="flex items-start gap-2 text-muted-foreground text-sm">
               <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
