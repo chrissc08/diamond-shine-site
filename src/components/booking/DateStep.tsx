@@ -14,7 +14,7 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const tomorrow = addDays(today, 1);
+  const minDate = today;
   const maxDate = addDays(today, BOOKING_WINDOW_DAYS);
 
   const disabledDays = [
