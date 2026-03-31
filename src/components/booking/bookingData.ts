@@ -157,20 +157,46 @@ export const addOns: AddOn[] = [
 ];
 
 // STRICT PRIORITY RULE: 9 AM reserved for high-duration services only
-// Complete Reset and Signature are NOT allowed at 9 AM
-export function getAllowedSlots(packageId: string): string[] {
+// Complete Reset and Signature are NOT allowed at 9 AM (unless fallback is active)
+export function getAllowedSlots(packageId: string, dateStr?: string): string[] {
+  const fallbackActive = dateStr ? is9amFallbackActive(dateStr) : false;
+
   switch (packageId) {
     case "diamond":
       return ["9am"];           // 5h — only fits at 9 AM
     case "interior":
       return ["9am"];           // 4h — only fits at 9 AM
     case "signature":
-      return ["1230pm", "3pm"]; // 2h — NOT allowed at 9 AM (priority rule)
+      return fallbackActive ? ["9am", "1230pm", "3pm"] : ["1230pm", "3pm"];
     case "essential":
-      return ["1230pm", "3pm"]; // 1h — NOT allowed at 9 AM (priority rule)
+      return fallbackActive ? ["9am", "1230pm", "3pm"] : ["1230pm", "3pm"];
     default:
       return [];
   }
+}
+
+// ── 9:00 AM Fallback Logic ──
+// If 9 AM is unbooked within 12 hours of appointment start, open it to all services
+const FALLBACK_HOURS = 12;
+
+export function is9amFallbackActive(dateStr: string): boolean {
+  const now = new Date();
+  // Build the 9:00 AM appointment datetime for the given date
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const appointmentTime = new Date(year, month - 1, day, 9, 0, 0);
+
+  // Calculate hours until the 9 AM slot
+  const hoursUntil = (appointmentTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+  // Fallback activates when within 12 hours AND the slot is not yet booked
+  if (hoursUntil > FALLBACK_HOURS || hoursUntil < 0) return false;
+
+  // Check if 9 AM is already booked on this date
+  const is9amBooked = mockBookings.some(
+    (b) => b.date === dateStr && b.slotId === "9am"
+  );
+
+  return !is9amBooked;
 }
 
 export function getSlotMessage(packageId: string): string | null {
