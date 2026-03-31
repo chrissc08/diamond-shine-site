@@ -207,11 +207,11 @@ function generateMockBookings(): MockBooking[] {
   // Day +8: Interior Restoration at 9am (end time 1:30 PM → blocks 12:30, 3 PM open)
   mocks.push({ date: getFutureDate(8), slotId: "9am", packageId: "interior" });
 
-  // Day +10: Complete Reset at 12:30pm (end time 3:00 PM → 3 PM slot available)
-  mocks.push({ date: getFutureDate(10), slotId: "1230pm", packageId: "complete" });
+  // Day +10: Signature Reset at 12:30pm (end time 3:00 PM → 3 PM slot available)
+  mocks.push({ date: getFutureDate(10), slotId: "1230pm", packageId: "signature" });
 
-  // Day +14: Signature at 12:30pm, mostly open
-  mocks.push({ date: getFutureDate(14), slotId: "1230pm", packageId: "signature" });
+  // Day +14: Essential at 12:30pm, mostly open
+  mocks.push({ date: getFutureDate(14), slotId: "1230pm", packageId: "essential" });
 
   return mocks;
 }
