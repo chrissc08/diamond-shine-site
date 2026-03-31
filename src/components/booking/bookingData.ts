@@ -88,7 +88,7 @@ export const packages: BookingPackage[] = [
       "Long-lasting spray protection",
       "Showroom-level finish",
     ],
-    time: "4–6 hrs",
+    time: "4–5 hrs",
     sedanPrice: "$300–450",
     suvPrice: "$350–550",
     tagline: "Showroom-level results, inside and out",

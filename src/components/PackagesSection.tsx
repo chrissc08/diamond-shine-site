@@ -70,7 +70,7 @@ const packages: Package[] = [
       "Iron decontamination + tar removal (if needed)",
       "Long-lasting spray protection",
     ],
-    time: "4–6 hours",
+    time: "4–5 hours",
     sedanPrice: "$300–450",
     suvPrice: "$350–550",
     tagline: "Showroom-level results, inside and out",
