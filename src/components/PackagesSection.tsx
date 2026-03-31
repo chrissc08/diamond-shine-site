@@ -19,7 +19,7 @@ const packages: Package[] = [
     subtitle: "Best for vehicles already in good condition",
     description: "Keep your car looking sharp with a consistent, high-quality maintenance clean. Designed for vehicles that are already in good condition and need upkeep — not heavy restoration.",
     features: [
-      "Foam hand wash + detailed hand wash",
+      "Foam wash + detailed hand wash",
       "Wheels cleaned + tire shine applied",
       "Light interior vacuum + wipe down",
       "Streak-free window cleaning",

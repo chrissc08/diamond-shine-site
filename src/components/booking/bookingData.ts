@@ -35,7 +35,7 @@ export const packages: BookingPackage[] = [
     name: "Essential Maintenance Detail",
     subtitle: "Best for vehicles already in good condition",
     features: [
-      "Foam hand wash + detailed hand wash",
+      "Foam wash + detailed hand wash",
       "Wheels cleaned + tire shine applied",
       "Light interior vacuum + wipe down",
       "Streak-free window cleaning",
