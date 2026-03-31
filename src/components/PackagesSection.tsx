@@ -50,6 +50,7 @@ const packages: Package[] = [
   {
     name: "Interior Revival Detail",
     subtitle: "For heavily used or neglected interiors",
+    description: "A full interior transformation for heavily used or neglected vehicles. Removes deep dirt, stains, odors, and pet hair to restore your cabin.",
     features: [
       "Full vacuum + compressed air blowout",
       "Pet hair removal",
