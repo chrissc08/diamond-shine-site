@@ -101,36 +101,48 @@ export const timeSlots: TimeSlot[] = [
   { id: "3pm", time: "3:00 PM", label: "Afternoon" },
 ];
 
-// Estimated duration in hours per package (upper bound + 30min travel buffer)
-export function getPackageDuration(packageId: string): number {
+// Service durations in hours (without buffer)
+export function getServiceDuration(packageId: string): number {
   switch (packageId) {
-    case "diamond": return 5;    // 4-5hrs avg
-    case "interior": return 4;   // 3-4hrs avg
-    case "complete": return 2;   // ~2hrs
-    case "signature": return 1;  // ~1hr
+    case "diamond": return 5;
+    case "interior": return 4;
+    case "complete": return 2;
+    case "signature": return 1;
     default: return 2;
   }
 }
 
-// Slot start times in hours from midnight (for duration math)
-const slotStartHours: Record<string, number> = {
+// Mandatory 30-minute buffer after every service
+const BUFFER_HOURS = 0.5;
+
+// Total time a booking occupies = service + buffer
+export function getTotalBookingTime(packageId: string): number {
+  return getServiceDuration(packageId) + BUFFER_HOURS;
+}
+
+// Slot start times in hours from midnight
+export const slotStartHours: Record<string, number> = {
   "9am": 9,
   "1230pm": 12.5,
   "3pm": 15,
 };
 
-/** Returns which slot IDs would be blocked by a booking at the given slot */
-export function getBlockedSlots(slotId: string, packageId: string): string[] {
+// Calculate end time for a booking at a given slot
+export function getBookingEndTime(slotId: string, packageId: string): number {
   const start = slotStartHours[slotId];
-  if (start === undefined) return [];
-  const duration = getPackageDuration(packageId);
-  const endTime = start + duration;
+  if (start === undefined) return 0;
+  return start + getTotalBookingTime(packageId);
+}
+
+/** Returns which slot IDs would be blocked by a booking at the given slot (using buffer) */
+export function getBlockedSlots(slotId: string, packageId: string): string[] {
+  const endTime = getBookingEndTime(slotId, packageId);
 
   return timeSlots
     .filter((s) => {
       const sStart = slotStartHours[s.id];
-      // Block any slot that starts before the job would finish
-      return sStart > start && sStart < endTime;
+      // Block any slot whose start time is before the booking end time (with buffer)
+      return sStart > slotStartHours[slotId] && sStart < endTime;
     })
     .map((s) => s.id);
 }
