@@ -176,12 +176,12 @@ export function getAllowedSlots(packageId: string): string[] {
 export function getSlotMessage(packageId: string): string | null {
   switch (packageId) {
     case "interior":
-      return "This service requires a morning appointment due to its duration (4 hours + 30min buffer)";
+      return "Interior Revival requires a morning appointment due to its duration (4 hours + 30min buffer)";
     case "diamond":
-      return "Diamond Full Detail requires the 9:00 AM slot (5 hours + 30min buffer)";
-    case "complete":
-      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
+      return "Ultimate Detail Package requires the 9:00 AM slot (5 hours + 30min buffer)";
     case "signature":
+      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
+    case "essential":
       return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
     default:
       return null;
