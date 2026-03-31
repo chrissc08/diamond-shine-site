@@ -43,7 +43,7 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
             selected={selected}
             onSelect={onSelect}
             disabled={disabledDays}
-            fromDate={tomorrow}
+            fromDate={minDate}
             toDate={maxDate}
             className={cn("p-3 pointer-events-auto")}
             classNames={{
