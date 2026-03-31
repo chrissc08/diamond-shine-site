@@ -221,16 +221,20 @@ export interface SlotAvailability {
   reason?: string;
 }
 
+// Maximum bookings per day
+const MAX_BOOKINGS_PER_DAY = 3;
+
 /**
- * Given existing bookings for a date, a selected package, and a slot,
- * determine if that slot is available and why not if it isn't.
+ * Strict, rule-based availability check.
+ * All availability is determined by time calculations with 30-min buffers.
+ * No conditional or ambiguous logic.
  */
 export function getSlotAvailability(
   dateStr: string,
   packageId: string,
   slotId: string
 ): SlotAvailability {
-  // 1. Check package-level restriction first
+  // 1. Package-level restriction (priority rule: 9 AM reserved for large services)
   const packageAllowed = getAllowedSlots(packageId);
   if (!packageAllowed.includes(slotId)) {
     return { allowed: false, reason: "Not available for this package" };
@@ -238,10 +242,9 @@ export function getSlotAvailability(
 
   const dayBookings = mockBookings.filter((b) => b.date === dateStr);
 
-  // 2. If a Diamond Full Detail is booked that day → block everything
-  const hasDiamond = dayBookings.some((b) => b.packageId === "diamond");
-  if (hasDiamond) {
-    return { allowed: false, reason: "Fully booked — large detail scheduled" };
+  // 2. Max 3 bookings per day
+  if (dayBookings.length >= MAX_BOOKINGS_PER_DAY) {
+    return { allowed: false, reason: "Maximum bookings reached for this day" };
   }
 
   // 3. If this specific slot is already taken
@@ -250,20 +253,21 @@ export function getSlotAvailability(
     return { allowed: false, reason: "This time is already booked" };
   }
 
-  // 4. Dynamic duration-based blocking:
-  //    If an existing booking's duration would overlap into this slot, block it
+  const requestedStart = slotStartHours[slotId];
+
+  // 4. Check if any EXISTING booking's end time (with buffer) overlaps into this slot
   for (const booking of dayBookings) {
-    const blocked = getBlockedSlots(booking.slotId, booking.packageId);
-    if (blocked.includes(slotId)) {
+    const existingEnd = getBookingEndTime(booking.slotId, booking.packageId);
+    if (requestedStart < existingEnd) {
       return { allowed: false, reason: "Unavailable — previous appointment still in progress" };
     }
   }
 
-  // 5. Check if the NEW booking's duration would overlap into already-taken slots
-  const wouldBlock = getBlockedSlots(slotId, packageId);
-  for (const blockedSlotId of wouldBlock) {
-    const conflict = dayBookings.some((b) => b.slotId === blockedSlotId);
-    if (conflict) {
+  // 5. Check if THIS booking's end time (with buffer) would overlap into already-taken slots
+  const requestedEnd = getBookingEndTime(slotId, packageId);
+  for (const booking of dayBookings) {
+    const existingStart = slotStartHours[booking.slotId];
+    if (existingStart > requestedStart && existingStart < requestedEnd) {
       return { allowed: false, reason: "Not enough time — overlaps with a later appointment" };
     }
   }
