@@ -33,7 +33,7 @@ const TimeSlotStep = ({ packageId, dateStr, selected, onSelect }: TimeSlotStepPr
       {packageId === "signature" && (
         <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-muted/50 border border-border text-sm text-muted-foreground">
           <Info className="w-4 h-4 mt-0.5 shrink-0" />
-          <span>If possible, we recommend choosing the 12:30 PM or 3:00 PM slot to keep the morning open for our larger detail packages. Thank you!</span>
+          <span>We recommend the 3:00 PM slot when available to keep earlier times open for larger detail packages. Thank you!</span>
         </div>
       )}
 
