@@ -233,16 +233,22 @@ export function getSlotAvailability(
     return { allowed: false, reason: "This time is already booked" };
   }
 
-  // 4. If an Interior Restoration is booked → only allow Signature after
-  const hasInterior = dayBookings.some((b) => b.packageId === "interior");
-  if (hasInterior && packageId !== "signature") {
-    return { allowed: false, reason: "Only small services available — large detail in progress" };
+  // 4. Dynamic duration-based blocking:
+  //    If an existing booking's duration would overlap into this slot, block it
+  for (const booking of dayBookings) {
+    const blocked = getBlockedSlots(booking.slotId, booking.packageId);
+    if (blocked.includes(slotId)) {
+      return { allowed: false, reason: "Unavailable — previous appointment still in progress" };
+    }
   }
 
-  // 5. If 2+ Complete Resets booked → only allow Signature
-  const completeCount = dayBookings.filter((b) => b.packageId === "complete").length;
-  if (completeCount >= 2 && packageId !== "signature") {
-    return { allowed: false, reason: "Only quick services available — schedule is tight" };
+  // 5. Check if the NEW booking's duration would overlap into already-taken slots
+  const wouldBlock = getBlockedSlots(slotId, packageId);
+  for (const blockedSlotId of wouldBlock) {
+    const conflict = dayBookings.some((b) => b.slotId === blockedSlotId);
+    if (conflict) {
+      return { allowed: false, reason: "Not enough time — overlaps with a later appointment" };
+    }
   }
 
   return { allowed: true };
