@@ -67,6 +67,7 @@ const packages: Package[] = [
   {
     name: "Ultimate Detail Package",
     subtitle: "The most complete detail offered",
+    description: "The most complete detail offered. A full interior and exterior transformation designed to deliver showroom-level results with long-lasting protection.",
     features: [
       "Everything in Signature Reset + Interior Revival",
       "Iron decontamination + tar removal (if needed)",
