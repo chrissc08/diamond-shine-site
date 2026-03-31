@@ -164,9 +164,9 @@ export function getAllowedSlots(packageId: string): string[] {
       return ["9am"];           // 5h — only fits at 9 AM
     case "interior":
       return ["9am"];           // 4h — only fits at 9 AM
-    case "complete":
-      return ["1230pm", "3pm"]; // 2h — NOT allowed at 9 AM (priority rule)
     case "signature":
+      return ["1230pm", "3pm"]; // 2h — NOT allowed at 9 AM (priority rule)
+    case "essential":
       return ["1230pm", "3pm"]; // 1h — NOT allowed at 9 AM (priority rule)
     default:
       return [];
