@@ -104,10 +104,10 @@ export const timeSlots: TimeSlot[] = [
 // Estimated duration in hours per package (upper bound + 30min travel buffer)
 export function getPackageDuration(packageId: string): number {
   switch (packageId) {
-    case "diamond": return 6.5;  // 6hrs + 30min buffer
-    case "interior": return 5.5; // 5hrs + 30min buffer
-    case "complete": return 3;   // 3hrs — finishes by 12, travel to 12:30
-    case "signature": return 2;  // 1.5hrs + 30min buffer
+    case "diamond": return 5;    // 4-5hrs avg
+    case "interior": return 4;   // 3-4hrs avg
+    case "complete": return 2;   // ~2hrs
+    case "signature": return 1;  // ~1hr
     default: return 2;
   }
 }
