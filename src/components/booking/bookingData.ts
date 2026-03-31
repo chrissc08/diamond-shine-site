@@ -154,17 +154,18 @@ export const addOns: AddOn[] = [
   { id: "stain", name: "Stain Treatment", price: "$25–100", icon: "droplets" },
 ];
 
-// Package-based slot restrictions (which slots a package CAN use)
+// STRICT PRIORITY RULE: 9 AM reserved for high-duration services only
+// Complete Reset and Signature are NOT allowed at 9 AM
 export function getAllowedSlots(packageId: string): string[] {
   switch (packageId) {
     case "diamond":
-      return ["9am"];
+      return ["9am"];           // 5h — only fits at 9 AM
     case "interior":
-      return ["9am"];
+      return ["9am"];           // 4h — only fits at 9 AM
     case "complete":
-      return ["9am", "1230pm"];
+      return ["1230pm", "3pm"]; // 2h — NOT allowed at 9 AM (priority rule)
     case "signature":
-      return ["9am", "1230pm", "3pm"];
+      return ["1230pm", "3pm"]; // 1h — NOT allowed at 9 AM (priority rule)
     default:
       return [];
   }
@@ -173,9 +174,13 @@ export function getAllowedSlots(packageId: string): string[] {
 export function getSlotMessage(packageId: string): string | null {
   switch (packageId) {
     case "interior":
-      return "This service requires a morning appointment due to its depth";
+      return "This service requires a morning appointment due to its duration (4 hours + 30min buffer)";
     case "diamond":
-      return "Diamond Full Detail requires the earliest slot for best results";
+      return "Diamond Full Detail requires the 9:00 AM slot (5 hours + 30min buffer)";
+    case "complete":
+      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
+    case "signature":
+      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
     default:
       return null;
   }
