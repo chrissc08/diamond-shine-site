@@ -101,36 +101,48 @@ export const timeSlots: TimeSlot[] = [
   { id: "3pm", time: "3:00 PM", label: "Afternoon" },
 ];
 
-// Estimated duration in hours per package (upper bound + 30min travel buffer)
-export function getPackageDuration(packageId: string): number {
+// Service durations in hours (without buffer)
+export function getServiceDuration(packageId: string): number {
   switch (packageId) {
-    case "diamond": return 5;    // 4-5hrs avg
-    case "interior": return 4;   // 3-4hrs avg
-    case "complete": return 2;   // ~2hrs
-    case "signature": return 1;  // ~1hr
+    case "diamond": return 5;
+    case "interior": return 4;
+    case "complete": return 2;
+    case "signature": return 1;
     default: return 2;
   }
 }
 
-// Slot start times in hours from midnight (for duration math)
-const slotStartHours: Record<string, number> = {
+// Mandatory 30-minute buffer after every service
+const BUFFER_HOURS = 0.5;
+
+// Total time a booking occupies = service + buffer
+export function getTotalBookingTime(packageId: string): number {
+  return getServiceDuration(packageId) + BUFFER_HOURS;
+}
+
+// Slot start times in hours from midnight
+export const slotStartHours: Record<string, number> = {
   "9am": 9,
   "1230pm": 12.5,
   "3pm": 15,
 };
 
-/** Returns which slot IDs would be blocked by a booking at the given slot */
-export function getBlockedSlots(slotId: string, packageId: string): string[] {
+// Calculate end time for a booking at a given slot
+export function getBookingEndTime(slotId: string, packageId: string): number {
   const start = slotStartHours[slotId];
-  if (start === undefined) return [];
-  const duration = getPackageDuration(packageId);
-  const endTime = start + duration;
+  if (start === undefined) return 0;
+  return start + getTotalBookingTime(packageId);
+}
+
+/** Returns which slot IDs would be blocked by a booking at the given slot (using buffer) */
+export function getBlockedSlots(slotId: string, packageId: string): string[] {
+  const endTime = getBookingEndTime(slotId, packageId);
 
   return timeSlots
     .filter((s) => {
       const sStart = slotStartHours[s.id];
-      // Block any slot that starts before the job would finish
-      return sStart > start && sStart < endTime;
+      // Block any slot whose start time is before the booking end time (with buffer)
+      return sStart > slotStartHours[slotId] && sStart < endTime;
     })
     .map((s) => s.id);
 }
@@ -142,17 +154,18 @@ export const addOns: AddOn[] = [
   { id: "stain", name: "Stain Treatment", price: "$25–100", icon: "droplets" },
 ];
 
-// Package-based slot restrictions (which slots a package CAN use)
+// STRICT PRIORITY RULE: 9 AM reserved for high-duration services only
+// Complete Reset and Signature are NOT allowed at 9 AM
 export function getAllowedSlots(packageId: string): string[] {
   switch (packageId) {
     case "diamond":
-      return ["9am"];
+      return ["9am"];           // 5h — only fits at 9 AM
     case "interior":
-      return ["9am"];
+      return ["9am"];           // 4h — only fits at 9 AM
     case "complete":
-      return ["9am", "1230pm"];
+      return ["1230pm", "3pm"]; // 2h — NOT allowed at 9 AM (priority rule)
     case "signature":
-      return ["9am", "1230pm", "3pm"];
+      return ["1230pm", "3pm"]; // 1h — NOT allowed at 9 AM (priority rule)
     default:
       return [];
   }
@@ -161,9 +174,13 @@ export function getAllowedSlots(packageId: string): string[] {
 export function getSlotMessage(packageId: string): string | null {
   switch (packageId) {
     case "interior":
-      return "This service requires a morning appointment due to its depth";
+      return "This service requires a morning appointment due to its duration (4 hours + 30min buffer)";
     case "diamond":
-      return "Diamond Full Detail requires the earliest slot for best results";
+      return "Diamond Full Detail requires the 9:00 AM slot (5 hours + 30min buffer)";
+    case "complete":
+      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
+    case "signature":
+      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
     default:
       return null;
   }
@@ -182,17 +199,17 @@ function generateMockBookings(): MockBooking[] {
     return d.toISOString().split("T")[0];
   };
 
-  // Day +4: Diamond Full Detail at 9am (blocks entire day)
+  // Day +4: Diamond Full Detail at 9am (blocks 12:30, end time 2:30 PM → 3 PM open)
   mocks.push({ date: getFutureDate(4), slotId: "9am", packageId: "diamond" });
 
-  // Day +8: Interior Restoration at 9am (only small jobs allowed after)
+  // Day +8: Interior Restoration at 9am (end time 1:30 PM → blocks 12:30, 3 PM open)
   mocks.push({ date: getFutureDate(8), slotId: "9am", packageId: "interior" });
 
-  // Day +10: Complete Reset at 9am (dynamically blocks 12:30 via duration)
-  mocks.push({ date: getFutureDate(10), slotId: "9am", packageId: "complete" });
+  // Day +10: Complete Reset at 12:30pm (end time 3:00 PM → 3 PM slot available)
+  mocks.push({ date: getFutureDate(10), slotId: "1230pm", packageId: "complete" });
 
-  // Day +14: One booking, mostly open
-  mocks.push({ date: getFutureDate(14), slotId: "9am", packageId: "signature" });
+  // Day +14: Signature at 12:30pm, mostly open
+  mocks.push({ date: getFutureDate(14), slotId: "1230pm", packageId: "signature" });
 
   return mocks;
 }
@@ -204,16 +221,20 @@ export interface SlotAvailability {
   reason?: string;
 }
 
+// Maximum bookings per day
+const MAX_BOOKINGS_PER_DAY = 3;
+
 /**
- * Given existing bookings for a date, a selected package, and a slot,
- * determine if that slot is available and why not if it isn't.
+ * Strict, rule-based availability check.
+ * All availability is determined by time calculations with 30-min buffers.
+ * No conditional or ambiguous logic.
  */
 export function getSlotAvailability(
   dateStr: string,
   packageId: string,
   slotId: string
 ): SlotAvailability {
-  // 1. Check package-level restriction first
+  // 1. Package-level restriction (priority rule: 9 AM reserved for large services)
   const packageAllowed = getAllowedSlots(packageId);
   if (!packageAllowed.includes(slotId)) {
     return { allowed: false, reason: "Not available for this package" };
@@ -221,10 +242,9 @@ export function getSlotAvailability(
 
   const dayBookings = mockBookings.filter((b) => b.date === dateStr);
 
-  // 2. If a Diamond Full Detail is booked that day → block everything
-  const hasDiamond = dayBookings.some((b) => b.packageId === "diamond");
-  if (hasDiamond) {
-    return { allowed: false, reason: "Fully booked — large detail scheduled" };
+  // 2. Max 3 bookings per day
+  if (dayBookings.length >= MAX_BOOKINGS_PER_DAY) {
+    return { allowed: false, reason: "Maximum bookings reached for this day" };
   }
 
   // 3. If this specific slot is already taken
@@ -233,20 +253,21 @@ export function getSlotAvailability(
     return { allowed: false, reason: "This time is already booked" };
   }
 
-  // 4. Dynamic duration-based blocking:
-  //    If an existing booking's duration would overlap into this slot, block it
+  const requestedStart = slotStartHours[slotId];
+
+  // 4. Check if any EXISTING booking's end time (with buffer) overlaps into this slot
   for (const booking of dayBookings) {
-    const blocked = getBlockedSlots(booking.slotId, booking.packageId);
-    if (blocked.includes(slotId)) {
+    const existingEnd = getBookingEndTime(booking.slotId, booking.packageId);
+    if (requestedStart < existingEnd) {
       return { allowed: false, reason: "Unavailable — previous appointment still in progress" };
     }
   }
 
-  // 5. Check if the NEW booking's duration would overlap into already-taken slots
-  const wouldBlock = getBlockedSlots(slotId, packageId);
-  for (const blockedSlotId of wouldBlock) {
-    const conflict = dayBookings.some((b) => b.slotId === blockedSlotId);
-    if (conflict) {
+  // 5. Check if THIS booking's end time (with buffer) would overlap into already-taken slots
+  const requestedEnd = getBookingEndTime(slotId, packageId);
+  for (const booking of dayBookings) {
+    const existingStart = slotStartHours[booking.slotId];
+    if (existingStart > requestedStart && existingStart < requestedEnd) {
       return { allowed: false, reason: "Not enough time — overlaps with a later appointment" };
     }
   }
