@@ -14,11 +14,11 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const tomorrow = addDays(today, 1);
+  const minDate = today;
   const maxDate = addDays(today, BOOKING_WINDOW_DAYS);
 
   const disabledDays = [
-    { before: tomorrow },
+    { before: minDate },
     { after: maxDate },
     (date: Date) => isSunday(date),
   ];
@@ -43,7 +43,7 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
             selected={selected}
             onSelect={onSelect}
             disabled={disabledDays}
-            fromDate={tomorrow}
+            fromDate={minDate}
             toDate={maxDate}
             className={cn("p-3 pointer-events-auto")}
             classNames={{
