@@ -97,11 +97,10 @@ const PackageCard = ({ pkg, index }: { pkg: Package; index: number }) => {
         </div>
       )}
 
-      <h3 className="font-display text-lg font-bold mb-1 tracking-wide">
+      <h3 className="font-display text-lg font-bold mb-2 tracking-wide">
         {pkg.name}
       </h3>
-      <p className="text-muted-foreground text-sm mb-1">{pkg.subtitle}</p>
-      <p className="text-muted-foreground/80 text-xs leading-relaxed mb-3">{pkg.description}</p>
+      <p className="text-muted-foreground text-xs leading-relaxed mb-3">{pkg.description}</p>
 
       <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
         <Clock className="w-3.5 h-3.5" />
