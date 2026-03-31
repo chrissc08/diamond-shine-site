@@ -18,7 +18,7 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
   const maxDate = addDays(today, BOOKING_WINDOW_DAYS);
 
   const disabledDays = [
-    { before: tomorrow },
+    { before: minDate },
     { after: maxDate },
     (date: Date) => isSunday(date),
   ];
