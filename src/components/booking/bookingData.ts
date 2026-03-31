@@ -106,7 +106,7 @@ export function getPackageDuration(packageId: string): number {
   switch (packageId) {
     case "diamond": return 6.5;  // 6hrs + 30min buffer
     case "interior": return 5.5; // 5hrs + 30min buffer
-    case "complete": return 3.5; // 3hrs + 30min buffer
+    case "complete": return 3;   // 3hrs — finishes by 12, travel to 12:30
     case "signature": return 2;  // 1.5hrs + 30min buffer
     default: return 2;
   }
