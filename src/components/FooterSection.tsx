@@ -33,6 +33,9 @@ const FooterSection = () => {
             <a href="mailto:diamondtouchdetailers@gmail.com" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
               <Mail className="w-4 h-4" /> diamondtouchdetailers@gmail.com
             </a>
+            <a href="https://instagram.com/diamondtouch.details" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
+              <Instagram className="w-4 h-4" /> @diamondtouch.details
+            </a>
             <div className="flex items-start gap-2 text-muted-foreground text-sm">
               <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
               <span>Orange County, NY &<br />Surrounding Areas</span>
