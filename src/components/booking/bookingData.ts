@@ -199,7 +199,13 @@ export function is9amFallbackActive(dateStr: string): boolean {
   return !is9amBooked;
 }
 
-export function getSlotMessage(packageId: string): string | null {
+export function getSlotMessage(packageId: string, dateStr?: string): string | null {
+  const fallbackActive = dateStr ? is9amFallbackActive(dateStr) : false;
+
+  if (fallbackActive && (packageId === "signature" || packageId === "essential")) {
+    return "A last-minute 9:00 AM opening is available today! All time slots are open for this service.";
+  }
+
   switch (packageId) {
     case "interior":
       return "Interior Revival requires a morning appointment due to its duration (4 hours + 30min buffer)";
