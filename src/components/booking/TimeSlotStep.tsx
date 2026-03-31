@@ -1,5 +1,5 @@
-import { Clock, Info, AlertTriangle } from "lucide-react";
-import { timeSlots, getAllowedSlots, getSlotMessage, getSlotAvailability, packages } from "./bookingData";
+import { Clock, Info, AlertTriangle, Zap } from "lucide-react";
+import { timeSlots, getAllowedSlots, getSlotMessage, getSlotAvailability, packages, is9amFallbackActive } from "./bookingData";
 
 interface TimeSlotStepProps {
   packageId: string;
@@ -9,8 +9,10 @@ interface TimeSlotStepProps {
 }
 
 const TimeSlotStep = ({ packageId, dateStr, selected, onSelect }: TimeSlotStepProps) => {
-  const message = getSlotMessage(packageId);
+  const message = getSlotMessage(packageId, dateStr);
   const pkg = packages.find((p) => p.id === packageId);
+  const fallbackActive = is9amFallbackActive(dateStr);
+  const isSmallService = packageId === "signature" || packageId === "essential";
 
   return (
     <div className="space-y-6">
@@ -23,6 +25,14 @@ const TimeSlotStep = ({ packageId, dateStr, selected, onSelect }: TimeSlotStepPr
         </p>
       </div>
 
+      {/* Last-minute fallback banner */}
+      {fallbackActive && isSmallService && (
+        <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-sm text-amber-400 animate-in fade-in slide-in-from-top-2 duration-500">
+          <Zap className="w-4 h-4 mt-0.5 shrink-0 fill-amber-400" />
+          <span className="font-medium">A last-minute 9:00 AM appointment just opened up. Limited availability.</span>
+        </div>
+      )}
+
       {message && (
         <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-primary/[0.06] border border-primary/20 text-sm text-primary">
           <Info className="w-4 h-4 mt-0.5 shrink-0" />
@@ -30,7 +40,7 @@ const TimeSlotStep = ({ packageId, dateStr, selected, onSelect }: TimeSlotStepPr
         </div>
       )}
 
-      {packageId === "essential" && (
+      {packageId === "essential" && !fallbackActive && (
         <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-muted/50 border border-border text-sm text-muted-foreground">
           <Info className="w-4 h-4 mt-0.5 shrink-0" />
           <span>We recommend the 3:00 PM slot when available to keep earlier times open for larger detail packages. Thank you!</span>
@@ -42,6 +52,7 @@ const TimeSlotStep = ({ packageId, dateStr, selected, onSelect }: TimeSlotStepPr
           const availability = getSlotAvailability(dateStr, packageId, slot.id);
           const isSelected = selected === slot.id;
           const isLimited = !availability.allowed && availability.reason?.includes("Only");
+          const isFallbackSlot = slot.id === "9am" && fallbackActive && isSmallService && availability.allowed;
 
           return (
             <button
@@ -54,12 +65,20 @@ const TimeSlotStep = ({ packageId, dateStr, selected, onSelect }: TimeSlotStepPr
                   ? "opacity-30 cursor-not-allowed border-border bg-card"
                   : isSelected
                   ? "border-primary bg-primary/[0.06] box-glow"
+                  : isFallbackSlot
+                  ? "border-amber-500/40 bg-amber-500/[0.06] hover:border-amber-500/60 hover:shadow-[0_0_20px_-5px_rgba(245,158,11,0.2)] cursor-pointer active:scale-[0.97] ring-1 ring-amber-500/20"
                   : "border-border bg-card hover:border-primary/30 hover:box-glow cursor-pointer active:scale-[0.97]"
               }`}
               title={!availability.allowed ? availability.reason : undefined}
             >
-              <Clock className={`w-5 h-5 mb-1 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
-              <span className={`font-display text-base font-bold ${isSelected ? "text-primary" : "text-foreground"}`}>
+              {/* Last-minute badge */}
+              {isFallbackSlot && !isSelected && (
+                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-amber-500 text-[9px] font-bold uppercase tracking-wider text-black whitespace-nowrap">
+                  Last-Minute Opening
+                </span>
+              )}
+              <Clock className={`w-5 h-5 mb-1 ${isSelected ? "text-primary" : isFallbackSlot ? "text-amber-400" : "text-muted-foreground"}`} />
+              <span className={`font-display text-base font-bold ${isSelected ? "text-primary" : isFallbackSlot ? "text-amber-400" : "text-foreground"}`}>
                 {slot.time}
               </span>
               <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-display">
