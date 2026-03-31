@@ -96,11 +96,44 @@ export const packages: BookingPackage[] = [
 ];
 
 export const timeSlots: TimeSlot[] = [
-  { id: "9am", time: "9:00 AM", label: "Premium Slot" },
-  { id: "1130am", time: "11:30 AM", label: "Mid Slot" },
-  { id: "130pm", time: "1:30 PM", label: "Flex Slot" },
-  { id: "3pm", time: "3:00 PM", label: "Quick Slot" },
+  { id: "9am", time: "9:00 AM", label: "Morning" },
+  { id: "1230pm", time: "12:30 PM", label: "Midday" },
+  { id: "3pm", time: "3:00 PM", label: "Afternoon" },
 ];
+
+// Estimated duration in hours per package (upper bound + 30min travel buffer)
+export function getPackageDuration(packageId: string): number {
+  switch (packageId) {
+    case "diamond": return 6.5;  // 6hrs + 30min buffer
+    case "interior": return 5.5; // 5hrs + 30min buffer
+    case "complete": return 3.5; // 3hrs + 30min buffer
+    case "signature": return 2;  // 1.5hrs + 30min buffer
+    default: return 2;
+  }
+}
+
+// Slot start times in hours from midnight (for duration math)
+const slotStartHours: Record<string, number> = {
+  "9am": 9,
+  "1230pm": 12.5,
+  "3pm": 15,
+};
+
+/** Returns which slot IDs would be blocked by a booking at the given slot */
+export function getBlockedSlots(slotId: string, packageId: string): string[] {
+  const start = slotStartHours[slotId];
+  if (start === undefined) return [];
+  const duration = getPackageDuration(packageId);
+  const endTime = start + duration;
+
+  return timeSlots
+    .filter((s) => {
+      const sStart = slotStartHours[s.id];
+      // Block any slot that starts before the job would finish
+      return sStart > start && sStart < endTime;
+    })
+    .map((s) => s.id);
+}
 
 export const addOns: AddOn[] = [
   { id: "ceramic", name: "Spray Protection (Ceramic Boost)", price: "$20–50", icon: "shield" },
