@@ -27,10 +27,10 @@ const FooterSection = () => {
           {/* Contact */}
           <div className="flex flex-col gap-3">
             <h4 className="font-display text-sm tracking-[0.15em] uppercase text-foreground mb-1">Contact</h4>
-            <a href="tel:" className="flex items-center gap-2 text-primary text-sm hover:text-primary/80 transition-colors w-fit">
-              <Phone className="w-4 h-4" /> (xxx) xxx-xxxx
+            <a href="tel:8457200963" className="flex items-center gap-2 text-primary text-sm hover:text-primary/80 transition-colors w-fit">
+              <Phone className="w-4 h-4" /> (845) 720-0963
             </a>
-            <a href="mailto:" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
+            <a href="mailto:info@diamondtouchdetailing.com" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
               <Mail className="w-4 h-4" /> info@diamondtouchdetailing.com
             </a>
             <div className="flex items-start gap-2 text-muted-foreground text-sm">
