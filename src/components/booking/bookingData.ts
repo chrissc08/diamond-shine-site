@@ -177,7 +177,7 @@ export function getAllowedSlots(packageId: string, dateStr?: string): string[] {
 
 // ── 9:00 AM Fallback Logic ──
 // If 9 AM is unbooked within 12 hours of appointment start, open it to all services
-const FALLBACK_HOURS = 12;
+const FALLBACK_HOURS = 24;
 
 export function is9amFallbackActive(dateStr: string): boolean {
   const now = new Date();
