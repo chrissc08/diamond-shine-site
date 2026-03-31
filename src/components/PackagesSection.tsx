@@ -33,6 +33,7 @@ const packages: Package[] = [
     name: "Signature Reset Detail",
     popular: true,
     subtitle: "A complete refresh — inside & out",
+    description: "Our most popular package. A complete refresh inside and out that restores your vehicle's appearance and adds protection to keep it cleaner longer.",
     features: [
       "Deep foam pre-wash + detailed hand wash",
       "Deep wheel cleaning (faces + barrels)",
