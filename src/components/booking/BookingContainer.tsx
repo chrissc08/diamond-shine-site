@@ -27,6 +27,7 @@ const BookingSection = () => {
     address: "",
     vehicleType: "",
     notes: "",
+    referral: "",
     images: [],
   });
 
