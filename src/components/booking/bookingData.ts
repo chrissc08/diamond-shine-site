@@ -154,7 +154,6 @@ export const addOns: AddOn[] = [
   { id: "pet", name: "Pet Hair Removal", price: "$25–75", icon: "dog" },
   { id: "stain", name: "Stain Treatment", price: "$25–100", icon: "droplets" },
   { id: "decon", name: "Paint Decontamination Treatment", price: "$40–80", icon: "sparkles" },
-  { id: "alcantara", name: "Alcantara / Suede Cleaning & Restoration", price: "$30–100", icon: "armchair" },
 ];
 
 // STRICT PRIORITY RULE: 9 AM reserved for high-duration services only
