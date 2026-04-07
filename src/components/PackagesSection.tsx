@@ -59,7 +59,7 @@ const packages: Package[] = [
       "Stain & odor treatment",
       "Deep plastics cleaning + UV protection",
     ],
-    time: "3–4 hours",
+    time: "3–5 hours",
     sedanPrice: "$240–320",
     suvPrice: "$280–360",
     tagline: "Brings your interior back to life",
