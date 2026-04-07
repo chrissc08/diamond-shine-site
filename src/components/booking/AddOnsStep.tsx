@@ -1,11 +1,11 @@
-import { ShieldCheck, Dog, Trash2, Droplets, Check } from "lucide-react";
+import { ShieldCheck, Dog, Droplets, Sparkles, Check } from "lucide-react";
 import { addOns } from "./bookingData";
 
 const iconMap: Record<string, React.ElementType> = {
   shield: ShieldCheck,
   dog: Dog,
-  trash: Trash2,
   droplets: Droplets,
+  sparkles: Sparkles,
 };
 
 interface AddOnsStepProps {
