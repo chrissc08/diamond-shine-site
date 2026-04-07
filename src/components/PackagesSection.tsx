@@ -11,6 +11,7 @@ interface Package {
   suvPrice: string;
   tagline: string;
   subtitle: string;
+  alcantaraNote?: string;
 }
 
 const packages: Package[] = [
