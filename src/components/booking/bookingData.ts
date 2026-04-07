@@ -86,7 +86,7 @@ export const packages: BookingPackage[] = [
     subtitle: "The most complete detail offered",
     features: [
       "Everything in Signature Reset + Interior Revival",
-      "Iron decontamination + tar removal (if needed)",
+      "Full paint decontamination (iron removal + clay treatment)",
       "Long-lasting exterior protection",
       "Showroom-level finish",
     ],
