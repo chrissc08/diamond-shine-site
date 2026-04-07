@@ -1,5 +1,5 @@
 import { useScrollReveal } from "./useScrollReveal";
-import { Dog, Droplets, Trash2, AlertTriangle, Mountain, ShieldCheck } from "lucide-react";
+import { Dog, Droplets, Trash2, Mountain, ShieldCheck, Sparkles } from "lucide-react";
 
 const addOns = [
   { icon: Dog, name: "Pet Hair Removal", price: "$25–75" },
@@ -7,6 +7,7 @@ const addOns = [
   { icon: Trash2, name: "Excess Trash Cleanup", price: "$20–50", note: "(applied to bill if vehicle requires additional service time due to heavy amounts of trash)" },
   { icon: Mountain, name: "Excess Sand / Mud", price: "$30–80", note: "(applied to bill if vehicle requires additional service time due to heavy amounts of sand/mud)" },
   { icon: ShieldCheck, name: "Ceramic / Wet Coat", price: "$20–50" },
+  { icon: Sparkles, name: "Paint Decontamination Treatment", price: "$40–80" },
 ];
 
 const AddOnsSection = () => {
