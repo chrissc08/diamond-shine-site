@@ -66,6 +66,13 @@ const AddOnsStep = ({ selected, onToggle }: AddOnsStepProps) => {
         })}
       </div>
 
+      <div className="rounded-lg bg-primary/[0.05] border border-primary/20 px-4 py-3 text-center">
+        <p className="text-xs text-primary font-display font-semibold mb-0.5">💎 Recommended Combo</p>
+        <p className="text-xs text-muted-foreground">
+          Pair <strong className="text-foreground">Paint Decontamination</strong> with <strong className="text-foreground">Spray Protection</strong> for the smoothest finish and longest-lasting results.
+        </p>
+      </div>
+
       <p className="text-center text-muted-foreground text-xs">
         Add-ons are optional — skip ahead if none are needed
       </p>
