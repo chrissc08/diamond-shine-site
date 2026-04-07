@@ -8,6 +8,7 @@ export interface BookingDetails {
   address: string;
   vehicleType: string;
   notes: string;
+  referral: string;
   images: File[];
 }
 
@@ -120,6 +121,19 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
           onChange={(e) => update("notes", e.target.value)}
           className={`${inputClass} resize-none`}
         />
+
+        <div className="pt-1">
+          <p className="text-sm text-muted-foreground mb-2">
+            Were you referred by someone? Both you and the person who referred you will receive 10% off!
+          </p>
+          <input
+            type="text"
+            placeholder="Name of person who referred you (optional)"
+            value={details.referral}
+            onChange={(e) => update("referral", e.target.value)}
+            className={inputClass}
+          />
+        </div>
 
         {/* Photo Upload */}
         <div className="pt-2">
