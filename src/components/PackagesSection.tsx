@@ -70,7 +70,7 @@ const packages: Package[] = [
     description: "The most complete detail offered. A full interior and exterior transformation designed to deliver showroom-level results with long-lasting protection.",
     features: [
       "Everything in Signature Reset + Interior Revival",
-      "Iron decontamination + tar removal (if needed)",
+      "Full paint decontamination (iron removal + clay treatment) to eliminate embedded contaminants and leave the surface smooth and fully prepped for protection",
       "Long-lasting exterior protection",
       "Showroom-level finish",
     ],
