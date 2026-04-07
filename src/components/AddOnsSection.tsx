@@ -8,7 +8,6 @@ const addOns = [
   { icon: ShieldCheck, name: "Ceramic / Wet Coat", price: "$20–50" },
   { icon: Mountain, name: "Excess Sand / Mud", price: "$30–80", note: "(applied to bill if vehicle requires additional service time due to heavy amounts of sand/mud)" },
   { icon: Sparkles, name: "Paint Decontamination Treatment", price: "$40–80" },
-  { icon: Armchair, name: "Alcantara / Suede Cleaning", price: "$30–100", note: "Specialized low-moisture cleaning & fiber restoration for delicate materials" },
 ];
 
 const AddOnsSection = () => {
