@@ -152,8 +152,8 @@ export function getBlockedSlots(slotId: string, packageId: string): string[] {
 export const addOns: AddOn[] = [
   { id: "ceramic", name: "Spray Protection (Ceramic Boost)", price: "$20–50", icon: "shield" },
   { id: "pet", name: "Pet Hair Removal", price: "$25–75", icon: "dog" },
-  
   { id: "stain", name: "Stain Treatment", price: "$25–100", icon: "droplets" },
+  { id: "decon", name: "Paint Decontamination Treatment", price: "$40–80", icon: "sparkles" },
 ];
 
 // STRICT PRIORITY RULE: 9 AM reserved for high-duration services only
