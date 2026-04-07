@@ -40,7 +40,7 @@ export const packages: BookingPackage[] = [
       "Light interior vacuum + wipe down",
       "Streak-free window cleaning",
     ],
-    time: "1–1.5 hrs",
+    time: "1–2 hrs",
     sedanPrice: "$90–120",
     suvPrice: "$110–140",
     tagline: "A consistent, high-quality maintenance clean",
@@ -75,7 +75,7 @@ export const packages: BookingPackage[] = [
       "Stain & odor treatment",
       "Deep plastics cleaning + UV protection",
     ],
-    time: "3–4 hrs",
+    time: "3–5 hrs",
     sedanPrice: "$240–320",
     suvPrice: "$280–360",
     tagline: "Brings your interior back to life",
@@ -90,7 +90,7 @@ export const packages: BookingPackage[] = [
       "Long-lasting exterior protection",
       "Showroom-level finish",
     ],
-    time: "4–5 hrs",
+    time: "4–6 hrs",
     sedanPrice: "$320–450",
     suvPrice: "$380–550",
     tagline: "Showroom-level results, inside and out",
@@ -106,10 +106,10 @@ export const timeSlots: TimeSlot[] = [
 // Service durations in hours (without buffer)
 export function getServiceDuration(packageId: string): number {
   switch (packageId) {
-    case "diamond": return 5;
-    case "interior": return 4;
-    case "signature": return 2;
-    case "essential": return 1;
+    case "diamond": return 6;
+    case "interior": return 5;
+    case "signature": return 3;
+    case "essential": return 2;
     default: return 2;
   }
 }
