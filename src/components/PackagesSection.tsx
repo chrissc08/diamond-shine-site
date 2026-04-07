@@ -82,6 +82,7 @@ const packages: Package[] = [
     sedanPrice: "$320–450",
     suvPrice: "$380–550",
     tagline: "Showroom-level results, inside and out",
+    alcantaraNote: "Light cleaning: +$30–$50 · Moderate/heavy restoration: +$50–$100",
   },
 ];
 
