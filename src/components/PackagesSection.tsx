@@ -11,6 +11,7 @@ interface Package {
   suvPrice: string;
   tagline: string;
   subtitle: string;
+  alcantaraNote?: string;
 }
 
 const packages: Package[] = [
@@ -28,6 +29,7 @@ const packages: Package[] = [
     sedanPrice: "$90–120",
     suvPrice: "$110–140",
     tagline: "A consistent, high-quality maintenance clean",
+    alcantaraNote: "Light cleaning: +$30–$50 · Moderate/heavy restoration: +$50–$100",
   },
   {
     name: "Signature Reset Detail",
@@ -46,6 +48,7 @@ const packages: Package[] = [
     sedanPrice: "$160–220",
     suvPrice: "$190–260",
     tagline: "Our most popular package — the perfect balance of clean & protection",
+    alcantaraNote: "Light cleaning: +$30–$50 · Moderate/heavy restoration: +$50–$100",
   },
   {
     name: "Interior Revival Detail",
@@ -63,6 +66,7 @@ const packages: Package[] = [
     sedanPrice: "$240–320",
     suvPrice: "$280–360",
     tagline: "Brings your interior back to life",
+    alcantaraNote: "Light cleaning: +$30–$50 · Moderate/heavy restoration: +$50–$100",
   },
   {
     name: "Ultimate Detail Package",
@@ -78,6 +82,7 @@ const packages: Package[] = [
     sedanPrice: "$320–450",
     suvPrice: "$380–550",
     tagline: "Showroom-level results, inside and out",
+    alcantaraNote: "Light cleaning: +$30–$50 · Moderate/heavy restoration: +$50–$100",
   },
 ];
 
@@ -117,6 +122,18 @@ const PackageCard = ({ pkg, index }: { pkg: Package; index: number }) => {
       </ul>
 
       <p className="text-primary/80 text-xs italic mb-4">👉 {pkg.tagline}</p>
+
+      {pkg.alcantaraNote && (
+        <div className="rounded-lg bg-accent/50 border border-border px-3 py-2.5 mb-4">
+          <p className="text-[11px] text-muted-foreground leading-relaxed">
+            <span className="font-semibold text-foreground">⚠️ Alcantara / Suede:</span>{" "}
+            Requires specialized low-moisture cleaning. Additional time & care needed.
+          </p>
+          <p className="text-[10px] text-primary/80 font-display font-semibold mt-1">
+            {pkg.alcantaraNote}
+          </p>
+        </div>
+      )}
 
       <div className="border-t border-border pt-5 space-y-2">
         <div className="flex justify-between text-sm">

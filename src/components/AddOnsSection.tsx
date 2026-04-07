@@ -1,5 +1,5 @@
 import { useScrollReveal } from "./useScrollReveal";
-import { Dog, Droplets, Trash2, Mountain, ShieldCheck, Sparkles } from "lucide-react";
+import { Dog, Droplets, Trash2, Mountain, ShieldCheck, Sparkles, Armchair } from "lucide-react";
 
 const addOns = [
   { icon: Dog, name: "Pet Hair Removal", price: "$25–75" },
@@ -8,6 +8,7 @@ const addOns = [
   { icon: ShieldCheck, name: "Ceramic / Wet Coat", price: "$20–50" },
   { icon: Mountain, name: "Excess Sand / Mud", price: "$30–80", note: "(applied to bill if vehicle requires additional service time due to heavy amounts of sand/mud)" },
   { icon: Sparkles, name: "Paint Decontamination Treatment", price: "$40–80" },
+  { icon: Armchair, name: "Alcantara / Suede Cleaning", price: "$30–100", note: "Specialized low-moisture cleaning & fiber restoration for delicate materials" },
 ];
 
 const AddOnsSection = () => {
@@ -23,7 +24,7 @@ const AddOnsSection = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
           {addOns.map((item, i) => {
             const { ref: cardRef, visible: cardVisible } = useScrollReveal();
             return (
