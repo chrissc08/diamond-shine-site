@@ -106,8 +106,8 @@ export const timeSlots: TimeSlot[] = [
 // Service durations in hours (without buffer)
 export function getServiceDuration(packageId: string): number {
   switch (packageId) {
-    case "diamond": return 5;
-    case "interior": return 4;
+    case "diamond": return 6;
+    case "interior": return 5;
     case "signature": return 2;
     case "essential": return 1;
     default: return 2;

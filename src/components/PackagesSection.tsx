@@ -74,7 +74,7 @@ const packages: Package[] = [
       "Long-lasting exterior protection",
       "Showroom-level finish",
     ],
-    time: "4–5 hours",
+    time: "4–6 hours",
     sedanPrice: "$320–450",
     suvPrice: "$380–550",
     tagline: "Showroom-level results, inside and out",
