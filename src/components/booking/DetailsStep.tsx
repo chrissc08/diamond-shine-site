@@ -8,6 +8,7 @@ export interface BookingDetails {
   address: string;
   vehicleType: string;
   notes: string;
+  referral: string;
   images: File[];
 }
 
