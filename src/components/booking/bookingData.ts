@@ -75,7 +75,7 @@ export const packages: BookingPackage[] = [
       "Stain & odor treatment",
       "Deep plastics cleaning + UV protection",
     ],
-    time: "3–4 hrs",
+    time: "3–5 hrs",
     sedanPrice: "$240–320",
     suvPrice: "$280–360",
     tagline: "Brings your interior back to life",
