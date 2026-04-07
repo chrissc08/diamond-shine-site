@@ -40,7 +40,7 @@ export const packages: BookingPackage[] = [
       "Light interior vacuum + wipe down",
       "Streak-free window cleaning",
     ],
-    time: "1–1.5 hrs",
+    time: "1–2 hrs",
     sedanPrice: "$90–120",
     suvPrice: "$110–140",
     tagline: "A consistent, high-quality maintenance clean",
