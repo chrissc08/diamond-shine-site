@@ -23,7 +23,7 @@ const AddOnsSection = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {addOns.map((item, i) => {
             const { ref: cardRef, visible: cardVisible } = useScrollReveal();
             return (
