@@ -8,7 +8,7 @@ const addOns = [
   { icon: ShieldCheck, name: "Ceramic / Wet Coat", price: "$20–50" },
   { icon: Mountain, name: "Excess Sand / Mud", price: "$30–80", note: "(applied to bill if vehicle requires additional service time due to heavy amounts of sand/mud)" },
   { icon: Sparkles, name: "Paint Decontamination Treatment", price: "$40–80" },
-  { icon: Gem, name: "Leather Protection Treatment", price: "$30–60", note: "Koch-Chemie Leather Star — restores, protects & leaves a non-greasy, luxurious finish" },
+  { icon: Gem, name: "Leather Protection Treatment", price: "$30–60", note: "Restores, protects & leaves a non-greasy, luxurious finish" },
 ];
 
 const AddOnsSection = () => {

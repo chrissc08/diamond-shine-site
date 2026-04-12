@@ -63,7 +63,7 @@ const packages: Package[] = [
       "Shampoo + water extraction",
       "Stain & odor treatment",
       "Deep plastics cleaning + UV protection",
-      "Leather conditioning & protection (Leather Star)",
+      "Leather conditioning & protection",
     ],
     time: "3–5 hours",
     sedanPrice: "$240–320",
