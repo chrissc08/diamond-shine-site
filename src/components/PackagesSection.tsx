@@ -77,8 +77,6 @@ const packages: Package[] = [
     features: [
       "Everything in Signature Reset + Interior Revival",
       "Full paint decontamination (iron removal + clay treatment) to eliminate embedded contaminants and leave the surface smooth and fully prepped for protection",
-      "Premium leather restoration & long-lasting protection (Leather Star)",
-      "Long-lasting exterior protection",
       "Showroom-level finish",
     ],
     time: "4–6 hours",
