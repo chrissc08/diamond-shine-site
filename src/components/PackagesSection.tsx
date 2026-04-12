@@ -119,7 +119,11 @@ const PackageCard = ({ pkg, index }: { pkg: Package; index: number }) => {
       <ul className="space-y-2.5 mb-6 flex-1">
         {pkg.features.map((f) => (
           <li key={f} className="flex items-start gap-2.5 text-sm text-secondary-foreground">
-            <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+            {f.startsWith("Recommended Upgrade:") ? (
+              <span className="w-4 text-primary mt-0.5 shrink-0 text-center font-bold">–</span>
+            ) : (
+              <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+            )}
             {f}
           </li>
         ))}
