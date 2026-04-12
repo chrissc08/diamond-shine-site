@@ -155,6 +155,7 @@ export const addOns: AddOn[] = [
   { id: "stain", name: "Stain Treatment", price: "$25–100", icon: "droplets" },
   { id: "decon", name: "Paint Decontamination Treatment", price: "$40–80", icon: "sparkles" },
   { id: "leather", name: "Leather Protection Treatment", price: "$30–60", icon: "gem" },
+  { id: "odor", name: "Odor Refresh Treatment", price: "$5–10", icon: "wind" },
 ];
 
 // STRICT PRIORITY RULE: 9 AM reserved for high-duration services only
