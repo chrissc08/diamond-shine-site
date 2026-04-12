@@ -44,7 +44,7 @@ const packages: Package[] = [
       "Light stain spot treatment",
       "Spray protection (ceramic or sealant boost)",
       "Streak-free window cleaning",
-      "Recommended Upgrade: Leather Protection Treatment for long-lasting softness & crack prevention (add-on)",
+      "Recommended Upgrade: Leather Protection Treatment — long-lasting softness & crack prevention for all leather surfaces (add-on)",
     ],
     time: "2–3 hours",
     sedanPrice: "$160–220",
