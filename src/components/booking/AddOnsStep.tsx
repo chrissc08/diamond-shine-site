@@ -69,9 +69,9 @@ const AddOnsStep = ({ selected, onToggle }: AddOnsStepProps) => {
       </div>
 
       <div className="rounded-lg bg-primary/[0.05] border border-primary/20 px-4 py-3 text-center">
-        <p className="text-xs text-primary font-display font-semibold mb-0.5">💎 Recommended Combo</p>
+        <p className="text-xs text-primary font-display font-semibold mb-0.5">💡 Works Well Together</p>
         <p className="text-xs text-muted-foreground">
-          Pair <strong className="text-foreground">Paint Decontamination</strong> with <strong className="text-foreground">Spray Protection</strong> for the smoothest finish and longest-lasting results.
+          If you're considering either one, <strong className="text-foreground">Paint Decontamination</strong> and <strong className="text-foreground">Spray Protection</strong> tend to work best as a pair — giving you the smoothest finish and longest-lasting results.
         </p>
       </div>
 
