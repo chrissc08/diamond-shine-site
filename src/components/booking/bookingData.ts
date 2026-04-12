@@ -312,4 +312,4 @@ export function getSlotAvailability(
 }
 
 // Max booking window in days
-export const BOOKING_WINDOW_DAYS = 21;
+export const BOOKING_WINDOW_DAYS = 14;
