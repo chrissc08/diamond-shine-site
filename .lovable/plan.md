@@ -1,10 +1,9 @@
 
 
-## Change Booking Window from 21 to 14 Days
+## Update Ultimate Detail Package Pricing
 
-Update the `BOOKING_WINDOW_DAYS` constant in `src/components/booking/bookingData.ts` from `21` to `14`. This single constant controls both the calendar date range and the display text, so no other files need changes.
+Update the sedan and SUV/truck prices for the "Ultimate Detail Package" in two files:
 
-### Technical Detail
-- **File**: `src/components/booking/bookingData.ts`
-- **Change**: Line with `export const BOOKING_WINDOW_DAYS = 21;` → `export const BOOKING_WINDOW_DAYS = 14;`
+1. **`src/components/PackagesSection.tsx`** — Change `sedanPrice: "$320–450"` to `"$350–450"` and `suvPrice: "$380–550"` to `"$400–550"`
+2. **`src/components/booking/bookingData.ts`** — Same changes for the `diamond` package entry
 
