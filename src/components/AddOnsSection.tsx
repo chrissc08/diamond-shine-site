@@ -2,13 +2,13 @@ import { useScrollReveal } from "./useScrollReveal";
 import { Dog, Droplets, Trash2, Mountain, ShieldCheck, Sparkles, Gem } from "lucide-react";
 
 const addOns = [
-  { icon: Dog, name: "Pet Hair Removal", price: "$25–75" },
-  { icon: Trash2, name: "Excess Trash Cleanup", price: "$20–50", note: "(applied to bill if vehicle requires additional service time due to heavy amounts of trash)" },
-  { icon: Droplets, name: "Heavy Stain Removal", price: "$25–100" },
-  { icon: ShieldCheck, name: "Ceramic / Wet Coat", price: "$20–50" },
-  { icon: Mountain, name: "Excess Sand / Mud", price: "$30–80", note: "(applied to bill if vehicle requires additional service time due to heavy amounts of sand/mud)" },
-  { icon: Sparkles, name: "Paint Decontamination Treatment", price: "$40–80" },
-  { icon: Gem, name: "Leather Protection Treatment", price: "$30–60", note: "Restores, protects & leaves a non-greasy, luxurious finish" },
+  { icon: Dog, name: "Pet Hair Removal", price: "$25–75", note: "Thorough removal of embedded pet hair from seats, carpets & hard-to-reach areas" },
+  { icon: Trash2, name: "Excess Trash Cleanup", price: "$20–50", note: "Applied to bill if vehicle requires additional service time due to heavy amounts of trash" },
+  { icon: Droplets, name: "Heavy Stain Removal", price: "$25–100", note: "Targeted deep-cleaning treatment for stubborn stains on upholstery, carpets & fabric surfaces" },
+  { icon: ShieldCheck, name: "Ceramic / Wet Coat", price: "$20–50", note: "Adds a hydrophobic layer of protection for enhanced gloss, water beading & UV defense" },
+  { icon: Mountain, name: "Excess Sand / Mud", price: "$30–80", note: "Applied to bill if vehicle requires additional service time due to heavy amounts of sand or mud" },
+  { icon: Sparkles, name: "Paint Decontamination Treatment", price: "$40–80", note: "Iron removal & clay treatment to eliminate bonded contaminants, leaving paint silky smooth" },
+  { icon: Gem, name: "Leather Protection Treatment", price: "$30–60", note: "Restores, conditions & protects leather with a non-greasy, luxurious finish that prevents cracking" },
 ];
 
 const AddOnsSection = () => {
