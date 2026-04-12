@@ -91,8 +91,8 @@ export const packages: BookingPackage[] = [
       "Showroom-level finish",
     ],
     time: "4–6 hrs",
-    sedanPrice: "$320–450",
-    suvPrice: "$380–550",
+    sedanPrice: "$350–450",
+    suvPrice: "$400–550",
     tagline: "Showroom-level results, inside and out",
   },
 ];
