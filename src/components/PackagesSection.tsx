@@ -59,7 +59,7 @@ const packages: Package[] = [
       "Full vacuum + compressed air blowout",
       "Pet hair removal",
       "Steam cleaning",
-      "Shampoo + water extraction",
+      "Shampoo + wet extraction",
       "Stain & odor treatment",
       "Deep plastics cleaning + UV protection",
       "Leather conditioning & protection",
