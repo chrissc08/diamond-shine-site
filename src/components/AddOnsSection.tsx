@@ -1,5 +1,5 @@
 import { useScrollReveal } from "./useScrollReveal";
-import { Dog, Droplets, Trash2, Mountain, ShieldCheck, Sparkles, Gem } from "lucide-react";
+import { Dog, Droplets, Trash2, Mountain, ShieldCheck, Sparkles, Gem, Wind } from "lucide-react";
 
 const optionalAddOns = [
   { icon: Dog, name: "Pet Hair Removal", price: "$25–75", note: "Thorough removal of embedded pet hair from seats, carpets & hard-to-reach areas" },
@@ -7,6 +7,7 @@ const optionalAddOns = [
   { icon: ShieldCheck, name: "Ceramic / Wet Coat", price: "$20–50", note: "Adds a hydrophobic layer of protection for enhanced gloss, water beading & UV defense" },
   { icon: Sparkles, name: "Paint Decontamination Treatment", price: "$40–80", note: "Iron removal & clay treatment to eliminate bonded contaminants, leaving paint silky smooth" },
   { icon: Gem, name: "Leather Protection Treatment", price: "$30–60", note: "Restores, conditions & protects leather with a non-greasy, luxurious finish that prevents cracking" },
+  { icon: Wind, name: "Odor Refresh Treatment", price: "$5–10", note: "A professional-grade air & surface deodorizer that neutralizes lingering odors for a fresh, clean cabin" },
 ];
 
 const conditionBased = [
