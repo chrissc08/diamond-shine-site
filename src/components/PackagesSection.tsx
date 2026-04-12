@@ -24,7 +24,6 @@ const packages: Package[] = [
       "Wheels cleaned + tire shine applied",
       "Light interior vacuum + wipe down",
       "Streak-free window cleaning",
-      "Leather conditioning available as an add-on",
     ],
     time: "1–2 hours",
     sedanPrice: "$90–120",
