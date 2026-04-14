@@ -50,6 +50,15 @@ const ConfirmStep = ({ packageId, selectedDate, timeSlotId, selectedAddOns, deta
         ))}
       </div>
 
+      {details.referral && (
+        <div className="flex items-center gap-3 px-5 py-3 rounded-lg bg-primary/10 border border-primary/20">
+          <span className="text-primary text-sm">🎉</span>
+          <p className="text-sm text-foreground">
+            Referred by <strong>{details.referral}</strong> — you'll both receive 10% off!
+          </p>
+        </div>
+      )}
+
       {addOns.length > 0 && (
         <div className="space-y-2">
           <span className="text-xs text-muted-foreground font-display uppercase tracking-wider">Add-ons</span>
