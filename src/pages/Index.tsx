@@ -6,6 +6,7 @@ import WhyChooseSection from "@/components/WhyChooseSection";
 import GallerySection from "@/components/GallerySection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import BookingSection from "@/components/BookingSection";
+import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import FooterSection from "@/components/FooterSection";
 
 const Index = () => {
