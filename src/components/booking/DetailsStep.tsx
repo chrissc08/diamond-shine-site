@@ -124,11 +124,11 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
 
         <div className="pt-1">
           <p className="text-sm text-muted-foreground mb-2">
-            Were you referred by someone? Both you and the person who referred you will receive 10% off!
+            Were you referred by someone? Enter their <strong className="text-foreground">first and last name</strong> so we can apply 10% off for both of you!
           </p>
           <input
             type="text"
-            placeholder="Name of person who referred you (optional)"
+            placeholder="First and last name of who referred you (optional)"
             value={details.referral}
             onChange={(e) => update("referral", e.target.value)}
             className={inputClass}
