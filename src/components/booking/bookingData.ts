@@ -42,7 +42,7 @@ export const packages: BookingPackage[] = [
     ],
     time: "1–2 hrs",
     sedanPrice: "$80–110",
-    suvPrice: "$100–125",
+    suvPrice: "$100–120",
     tagline: "A consistent, high-quality maintenance clean",
   },
   {
@@ -59,7 +59,7 @@ export const packages: BookingPackage[] = [
       "Streak-free window cleaning",
     ],
     time: "2–3 hrs",
-    sedanPrice: "$140–200",
+    sedanPrice: "$150–200",
     suvPrice: "$170–230",
     tagline: "The perfect balance of clean & protection",
   },
@@ -92,7 +92,7 @@ export const packages: BookingPackage[] = [
     ],
     time: "4–6 hrs",
     sedanPrice: "$310–400",
-    suvPrice: "$360–490",
+    suvPrice: "$360–450",
     tagline: "Showroom-level results, inside and out",
   },
 ];
