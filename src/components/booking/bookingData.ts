@@ -41,8 +41,8 @@ export const packages: BookingPackage[] = [
       "Streak-free window cleaning",
     ],
     time: "1–2 hrs",
-    sedanPrice: "$90–120",
-    suvPrice: "$110–140",
+    sedanPrice: "$80–110",
+    suvPrice: "$100–125",
     tagline: "A consistent, high-quality maintenance clean",
   },
   {
@@ -59,8 +59,8 @@ export const packages: BookingPackage[] = [
       "Streak-free window cleaning",
     ],
     time: "2–3 hrs",
-    sedanPrice: "$160–220",
-    suvPrice: "$190–260",
+    sedanPrice: "$145–200",
+    suvPrice: "$170–235",
     tagline: "The perfect balance of clean & protection",
   },
   {
@@ -76,8 +76,8 @@ export const packages: BookingPackage[] = [
       "Deep plastics cleaning + UV protection",
     ],
     time: "3–5 hrs",
-    sedanPrice: "$240–320",
-    suvPrice: "$280–360",
+    sedanPrice: "$215–290",
+    suvPrice: "$250–325",
     tagline: "Brings your interior back to life",
   },
   {
@@ -91,8 +91,8 @@ export const packages: BookingPackage[] = [
       "Showroom-level finish",
     ],
     time: "4–6 hrs",
-    sedanPrice: "$350–450",
-    suvPrice: "$400–550",
+    sedanPrice: "$315–405",
+    suvPrice: "$360–495",
     tagline: "Showroom-level results, inside and out",
   },
 ];
