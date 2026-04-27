@@ -205,7 +205,7 @@ export function getSlotMessage(packageId: string, dateStr?: string): string | nu
   const fallbackActive = dateStr ? is9amFallbackActive(dateStr) : false;
 
   if (fallbackActive && (packageId === "signature" || packageId === "essential")) {
-    return "A last-minute 9:00 AM opening is available today! All time slots are open for this service.";
+    return null;
   }
 
   switch (packageId) {
