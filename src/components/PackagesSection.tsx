@@ -41,7 +41,7 @@ const packages: Package[] = [
       "Deep wheel cleaning (faces + barrels)",
       "Full interior vacuum + wipe down",
       "Light stain spot treatment",
-      "Spray-on hydrophobic ceramic boost/ sealant",
+      "Spray-on hydrophobic ceramic boost/sealant",
       "Streak-free window cleaning",
       "Recommended Upgrade: Leather Protection Treatment for long-lasting softness & crack prevention (add-on)",
     ],
