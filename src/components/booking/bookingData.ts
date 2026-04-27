@@ -138,6 +138,12 @@ export function getBookingEndTime(slotId: string, packageId: string): number {
 
 /** Returns which slot IDs would be blocked by a booking at the given slot (using buffer) */
 export function getBlockedSlots(slotId: string, packageId: string): string[] {
+  // Carve-out: Signature/Essential at the 9 AM fallback slot must NEVER block 12:30 or 3 PM.
+  // These small services are guaranteed to fit entirely within the morning window.
+  if (slotId === "9am" && (packageId === "signature" || packageId === "essential")) {
+    return [];
+  }
+
   const endTime = getBookingEndTime(slotId, packageId);
 
   return timeSlots
@@ -293,6 +299,13 @@ export function getSlotAvailability(
 
   // 4. Check if any EXISTING booking's end time (with buffer) overlaps into this slot
   for (const booking of dayBookings) {
+    // Carve-out: a Signature/Essential at the 9 AM fallback never blocks later slots.
+    if (
+      booking.slotId === "9am" &&
+      (booking.packageId === "signature" || booking.packageId === "essential")
+    ) {
+      continue;
+    }
     const existingEnd = getBookingEndTime(booking.slotId, booking.packageId);
     if (requestedStart < existingEnd) {
       return { allowed: false, reason: "Unavailable — previous appointment still in progress" };
@@ -302,6 +315,14 @@ export function getSlotAvailability(
   // 5. Check if THIS booking's end time (with buffer) would overlap into already-taken slots
   const requestedEnd = getBookingEndTime(slotId, packageId);
   for (const booking of dayBookings) {
+    // Carve-out: when booking a Signature/Essential into the 9 AM fallback,
+    // it cannot push into 12:30 or 3 PM regardless of math.
+    if (
+      slotId === "9am" &&
+      (packageId === "signature" || packageId === "essential")
+    ) {
+      break;
+    }
     const existingStart = slotStartHours[booking.slotId];
     if (existingStart > requestedStart && existingStart < requestedEnd) {
       return { allowed: false, reason: "Not enough time — overlaps with a later appointment" };
