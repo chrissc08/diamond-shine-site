@@ -4,7 +4,7 @@ import { Dog, Droplets, Trash2, Mountain, ShieldCheck, Sparkles, Gem, Wind } fro
 const optionalAddOns = [
   { icon: Dog, name: "Pet Hair Removal", price: "$25–75", note: "Thorough removal of embedded pet hair from seats, carpets & hard-to-reach areas" },
   { icon: Droplets, name: "Heavy Stain Removal", price: "$25–100", note: "Targeted deep-cleaning treatment for stubborn stains on upholstery, carpets & fabric surfaces" },
-  { icon: ShieldCheck, name: "Ceramic / Wet Coat", price: "$20–50", note: "Adds a hydrophobic layer of protection for enhanced gloss, water beading & UV defense" },
+  { icon: ShieldCheck, name: "Ceramic Spray Boost", price: "$20–50", note: "Quick spray-on hydrophobic ceramic boost (not a true ceramic coating) — adds gloss, water beading & short-term UV defense" },
   { icon: Sparkles, name: "Paint Decontamination Treatment", price: "$40–80", note: "Iron removal & clay treatment to eliminate bonded contaminants, leaving paint silky smooth" },
   { icon: Gem, name: "Leather Protection Treatment", price: "$30–60", note: "Restores, conditions & protects leather with a non-greasy, luxurious finish that prevents cracking" },
   { icon: Wind, name: "Odor Refresh Treatment", price: "$5–10", note: "A professional-grade air & surface deodorizer that neutralizes lingering odors for a fresh, clean cabin" },
