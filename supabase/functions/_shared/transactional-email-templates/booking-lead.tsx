@@ -108,6 +108,7 @@ const Row = ({ label, value }: { label: string; value?: string }) => (
 
 export const template = {
   component: BookingLeadEmail,
+  to: 'diamondtouchdetailers@gmail.com',
   subject: (data: Record<string, any>) =>
     `New Booking: ${data.customerName || 'Customer'} — ${data.packageName || 'Detail'}`,
   displayName: 'Booking lead',
