@@ -1,6 +1,9 @@
 import { useState, useCallback } from "react";
 import { useScrollReveal } from "../useScrollReveal";
 import { Send, ArrowLeft, ArrowRight } from "lucide-react";
+import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 import StepIndicator from "./StepIndicator";
 import PackageStep from "./PackageStep";
 import DateStep from "./DateStep";
@@ -9,12 +12,13 @@ import AddOnsStep from "./AddOnsStep";
 import DetailsStep, { type BookingDetails } from "./DetailsStep";
 import ConfirmStep from "./ConfirmStep";
 import BookingSummary from "./BookingSummary";
-import { getSlotAvailability, packages } from "./bookingData";
+import { getSlotAvailability, packages, timeSlots, addOns as addOnData } from "./bookingData";
 
 const BookingSection = () => {
   const { ref, visible } = useScrollReveal();
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -67,11 +71,59 @@ const BookingSection = () => {
     }
   };
 
+  const submitBooking = async () => {
+    if (!selectedPackage || !selectedDate || !selectedSlot) return;
+    setSubmitting(true);
+    const pkg = packages.find((p) => p.id === selectedPackage);
+    const slot = timeSlots.find((s) => s.id === selectedSlot);
+    const isSuv = /suv|truck|van/i.test(details.vehicleType);
+    const price = pkg ? (isSuv ? pkg.suvPrice : pkg.sedanPrice) : "";
+    const chosenAddOns = addOnData
+      .filter((a) => selectedAddOns.includes(a.id))
+      .map((a) => ({ name: a.name, price: a.price }));
+
+    const bookingId = crypto.randomUUID();
+    try {
+      const { error } = await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "booking-lead",
+          recipientEmail: "diamondtouchdetailers@gmail.com",
+          idempotencyKey: `booking-lead-${bookingId}`,
+          templateData: {
+            customerName: details.name,
+            customerPhone: details.phone,
+            customerEmail: details.email,
+            address: details.address,
+            vehicleType: details.vehicleType,
+            packageName: pkg?.name,
+            packagePrice: price,
+            packageDuration: pkg?.time,
+            date: format(selectedDate, "EEEE, MMMM d, yyyy"),
+            time: slot?.time,
+            addOns: chosenAddOns,
+            notes: details.notes,
+            referral: details.referral,
+            submittedAt: format(new Date(), "MMM d, yyyy 'at' h:mm a"),
+          },
+        },
+      });
+      if (error) throw error;
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Booking submission failed", err);
+      toast({
+        title: "Submission failed",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const next = () => {
     if (step < 5) setStep(step + 1);
-    else {
-      setSubmitted(true);
-    }
+    else submitBooking();
   };
 
   const back = () => {
@@ -206,9 +258,9 @@ const BookingSection = () => {
             <button
               type="button"
               onClick={next}
-              disabled={!canProceed()}
+              disabled={!canProceed() || submitting}
               className={`flex items-center gap-2 px-7 py-3 text-sm font-display font-semibold uppercase tracking-wider rounded-lg transition-all duration-300 active:scale-[0.97] ${
-                canProceed()
+                canProceed() && !submitting
                   ? "bg-primary text-primary-foreground box-glow hover:box-glow-strong"
                   : "bg-muted text-muted-foreground cursor-not-allowed"
               }`}
@@ -216,7 +268,7 @@ const BookingSection = () => {
               {step === 5 ? (
                 <>
                   <Send className="w-4 h-4" />
-                  Submit Request
+                  {submitting ? "Sending..." : "Submit Request"}
                 </>
               ) : (
                 <>
