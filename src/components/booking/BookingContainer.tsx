@@ -13,9 +13,13 @@ import DetailsStep, { type BookingDetails } from "./DetailsStep";
 import ConfirmStep from "./ConfirmStep";
 import BookingSummary from "./BookingSummary";
 import { getSlotAvailability, packages, timeSlots, addOns as addOnData } from "./bookingData";
+import { useLiveBookings } from "@/hooks/useLiveBookings";
+import { useVacationPeriods, isDateInVacation } from "@/hooks/useVacationPeriods";
 
 const BookingSection = () => {
   const { ref, visible } = useScrollReveal();
+  useLiveBookings();
+  const { periods: vacationPeriods } = useVacationPeriods();
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -84,6 +88,39 @@ const BookingSection = () => {
 
     const bookingId = crypto.randomUUID();
     try {
+      // Block vacation dates client-side as a safety net
+      if (isDateInVacation(selectedDate, vacationPeriods)) {
+        toast({
+          title: "Date unavailable",
+          description: "We're unavailable on that date — please pick another.",
+          variant: "destructive",
+        });
+        setSubmitting(false);
+        return;
+      }
+
+      // Save booking to database first
+      const { error: dbError } = await supabase.from("bookings").insert({
+        id: bookingId,
+        customer_name: details.name,
+        customer_email: details.email || "",
+        customer_phone: details.phone,
+        address: details.address,
+        vehicle_type: details.vehicleType,
+        package_id: selectedPackage,
+        package_name: pkg?.name || "",
+        package_price: price,
+        package_duration: pkg?.time,
+        add_ons: chosenAddOns,
+        booking_date: selectedDate.toISOString().split("T")[0],
+        time_slot_id: selectedSlot,
+        time_slot_label: slot?.time || "",
+        notes: details.notes || null,
+        referral: details.referral || null,
+        status: "confirmed",
+      });
+      if (dbError) throw dbError;
+
       const { error } = await supabase.functions.invoke("send-transactional-email", {
         body: {
           templateName: "booking-lead",
