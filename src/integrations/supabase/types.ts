@@ -14,6 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          add_ons: Json
+          address: string
+          booking_date: string
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          created_at: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          notes: string | null
+          package_duration: string | null
+          package_id: string
+          package_name: string
+          package_price: string | null
+          referral: string | null
+          status: string
+          time_slot_id: string
+          time_slot_label: string
+          updated_at: string
+          vehicle_type: string
+        }
+        Insert: {
+          add_ons?: Json
+          address: string
+          booking_date: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          id?: string
+          notes?: string | null
+          package_duration?: string | null
+          package_id: string
+          package_name: string
+          package_price?: string | null
+          referral?: string | null
+          status?: string
+          time_slot_id: string
+          time_slot_label: string
+          updated_at?: string
+          vehicle_type: string
+        }
+        Update: {
+          add_ons?: Json
+          address?: string
+          booking_date?: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          notes?: string | null
+          package_duration?: string | null
+          package_id?: string
+          package_name?: string
+          package_price?: string | null
+          referral?: string | null
+          status?: string
+          time_slot_id?: string
+          time_slot_label?: string
+          updated_at?: string
+          vehicle_type?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -125,9 +197,77 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vacation_periods: {
+        Row: {
+          active: boolean
+          created_at: string
+          end_date: string
+          id: string
+          message: string | null
+          start_date: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          end_date: string
+          id?: string
+          message?: string | null
+          start_date: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          end_date?: string
+          id?: string
+          message?: string | null
+          start_date?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      public_booking_slots: {
+        Row: {
+          booking_date: string | null
+          package_id: string | null
+          time_slot_id: string | null
+        }
+        Insert: {
+          booking_date?: string | null
+          package_id?: string | null
+          time_slot_id?: string | null
+        }
+        Update: {
+          booking_date?: string | null
+          package_id?: string | null
+          time_slot_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       delete_email: {
@@ -137,6 +277,21 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      get_booked_slots: {
+        Args: never
+        Returns: {
+          booking_date: string
+          package_id: string
+          time_slot_id: string
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
       }
       move_to_dlq: {
         Args: {
@@ -157,7 +312,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -284,6 +439,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin"],
+    },
   },
 } as const

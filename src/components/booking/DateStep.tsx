@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { addDays, isSunday, format } from "date-fns";
 import { CalendarDays } from "lucide-react";
 import { BOOKING_WINDOW_DAYS } from "./bookingData";
+import { useVacationPeriods, isDateInVacation } from "@/hooks/useVacationPeriods";
 
 interface DateStepProps {
   selected: Date | undefined;
@@ -17,11 +18,13 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
   const tomorrow = addDays(today, 1);
   const minDate = tomorrow;
   const maxDate = addDays(today, BOOKING_WINDOW_DAYS);
+  const { periods } = useVacationPeriods();
 
   const disabledDays = [
     { before: minDate },
     { after: maxDate },
     (date: Date) => isSunday(date),
+    (date: Date) => !!isDateInVacation(date, periods),
   ];
 
   return (
