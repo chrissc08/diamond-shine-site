@@ -48,7 +48,7 @@ const AdminBookings = () => {
     if (error) {
       toast({ title: "Failed to load bookings", description: error.message, variant: "destructive" });
     } else {
-      setBookings((data as Booking[]) || []);
+      setBookings(((data as unknown) as Booking[]) || []);
     }
     setLoading(false);
   };
