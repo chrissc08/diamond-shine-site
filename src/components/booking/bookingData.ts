@@ -258,6 +258,12 @@ function generateMockBookings(): MockBooking[] {
 
 export const mockBookings: MockBooking[] = generateMockBookings();
 
+// Allow runtime replacement with real DB bookings
+export function setLiveBookings(bookings: MockBooking[]) {
+  mockBookings.length = 0;
+  mockBookings.push(...bookings);
+}
+
 export interface SlotAvailability {
   allowed: boolean;
   reason?: string;
