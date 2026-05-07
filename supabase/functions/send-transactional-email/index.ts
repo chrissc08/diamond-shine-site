@@ -30,6 +30,21 @@ function generateToken(): string {
     .join('')
 }
 
+function getBearerToken(req: Request): string | null {
+  const authHeader = req.headers.get('authorization') || ''
+  const match = authHeader.match(/^Bearer\s+(.+)$/i)
+  return match?.[1] || null
+}
+
+function getJwtRole(token: string): string | null {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
+    return typeof payload.role === 'string' ? payload.role : null
+  } catch {
+    return null
+  }
+}
+
 // Auth note: this function uses verify_jwt = true in config.toml, so Supabase's
 // gateway validates the caller's JWT (anon or service_role) before the request
 // reaches this code. No in-function auth check is needed.
@@ -106,6 +121,43 @@ Deno.serve(async (req) => {
     )
   }
 
+  // Create Supabase client with service role (bypasses RLS)
+  const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+  const token = getBearerToken(req)
+  const callerRole = token ? getJwtRole(token) : null
+
+  if (!template.to && callerRole !== 'service_role') {
+    if (!token) {
+      return new Response(JSON.stringify({ error: 'Authentication required' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    const { data: userResult, error: userError } = await supabase.auth.getUser(token)
+    const userId = userResult.user?.id
+
+    if (userError || !userId) {
+      return new Response(JSON.stringify({ error: 'Invalid authentication' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    const { data: isAdmin, error: roleError } = await supabase.rpc('has_role', {
+      _user_id: userId,
+      _role: 'admin',
+    })
+
+    if (roleError || !isAdmin) {
+      return new Response(JSON.stringify({ error: 'Admin access required' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+  }
+
   // Resolve effective recipient: template-level `to` takes precedence over
   // the caller-provided recipientEmail. This allows notification templates
   // to always send to a fixed address (e.g., site owner from env var).
@@ -122,9 +174,6 @@ Deno.serve(async (req) => {
       }
     )
   }
-
-  // Create Supabase client with service role (bypasses RLS)
-  const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
   // 2. Check suppression list (fail-closed: if we can't verify, don't send)
   const { data: suppressed, error: suppressionError } = await supabase
