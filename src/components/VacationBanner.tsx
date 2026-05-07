@@ -23,20 +23,18 @@ const VacationBanner = () => {
   const isActive = today >= startD && today <= endD;
 
   return (
-    <div className="bg-amber-500/10 border-b border-amber-500/30 text-amber-200">
-      <div className="container mx-auto px-6 py-2.5 flex items-center gap-3">
-        <Plane className="w-4 h-4 shrink-0" />
-        <p className="text-sm flex-1">
-          {isActive ? "We're currently on break " : "Upcoming break: "}
-          <span className="font-semibold">
-            {format(startD, "MMM d")} – {format(endD, "MMM d, yyyy")}
-          </span>
-          {relevant.message ? ` — ${relevant.message}` : isActive ? " — bookings paused." : " — booking paused for these dates."}
-        </p>
-        <button onClick={() => setDismissed(true)} className="opacity-70 hover:opacity-100">
-          <X className="w-4 h-4" />
-        </button>
-      </div>
+    <div className="inline-flex items-center gap-3 max-w-full bg-amber-500/15 border border-amber-500/40 text-amber-200 rounded-full px-5 py-2.5 backdrop-blur-md shadow-lg">
+      <Plane className="w-4 h-4 shrink-0" />
+      <p className="text-sm">
+        {isActive ? "We're currently on break " : "Upcoming break: "}
+        <span className="font-semibold">
+          {format(startD, "MMM d")} – {format(endD, "MMM d, yyyy")}
+        </span>
+        {relevant.message ? ` — ${relevant.message}` : isActive ? " — bookings paused." : " — booking paused for these dates."}
+      </p>
+      <button onClick={() => setDismissed(true)} className="opacity-70 hover:opacity-100 shrink-0" aria-label="Dismiss">
+        <X className="w-4 h-4" />
+      </button>
     </div>
   );
 };
