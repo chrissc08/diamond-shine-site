@@ -22,25 +22,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsAdmin(false);
       return;
     }
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    setIsAdmin(!!data);
+    const { data, error } = await supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
+    setIsAdmin(!error && data === true);
   };
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    let authCheckId = 0;
+
+    const syncSession = async (newSession: Session | null) => {
+      const checkId = ++authCheckId;
+      setLoading(true);
       setSession(newSession);
+      await checkAdmin(newSession?.user?.id);
+      if (checkId === authCheckId) setLoading(false);
+    };
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
       // Defer to avoid deadlock
-      setTimeout(() => checkAdmin(newSession?.user?.id), 0);
+      setTimeout(() => syncSession(newSession), 0);
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      checkAdmin(session?.user?.id).finally(() => setLoading(false));
+      syncSession(session);
     });
 
     return () => sub.subscription.unsubscribe();
