@@ -17,14 +17,14 @@ const AdminLogin = () => {
   // Check if any admins exist already
   useEffect(() => {
     (async () => {
-      const { count } = await supabase
-        .from("user_roles")
-        .select("*", { count: "exact", head: true })
-        .eq("role", "admin");
+      const { data: adminExists } = await supabase.rpc("admin_exists");
       // If no admin yet, allow signup
-      if (!count || count === 0) {
+      if (!adminExists) {
         setMode("signup");
         setNeedsClaim(true);
+      } else {
+        setMode("signin");
+        setNeedsClaim(false);
       }
     })();
   }, []);
@@ -34,14 +34,8 @@ const AdminLogin = () => {
   }
 
   const claimAdmin = async (userId: string) => {
-    // Try to claim admin role; will only work if no admin exists yet (we double-check)
-    const { count } = await supabase
-      .from("user_roles")
-      .select("*", { count: "exact", head: true })
-      .eq("role", "admin");
-    if (!count || count === 0) {
-      await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
-    }
+    const { data, error } = await supabase.rpc("claim_first_admin");
+    if (error || !data) throw new Error("Admin setup is already complete. Please sign in instead.");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,13 +58,11 @@ const AdminLogin = () => {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         // Verify admin
-        const { data: roleRow } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", data.user.id)
-          .eq("role", "admin")
-          .maybeSingle();
-        if (!roleRow) {
+        const { data: isAllowed, error: roleError } = await supabase.rpc("has_role", {
+          _user_id: data.user.id,
+          _role: "admin",
+        });
+        if (roleError || !isAllowed) {
           await supabase.auth.signOut();
           throw new Error("This account does not have admin access.");
         }
