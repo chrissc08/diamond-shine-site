@@ -1,5 +1,4 @@
 import Navbar from "@/components/Navbar";
-import VacationBanner from "@/components/VacationBanner";
 import HeroSection from "@/components/HeroSection";
 import PackagesSection from "@/components/PackagesSection";
 import AddOnsSection from "@/components/AddOnsSection";
@@ -13,7 +12,6 @@ import FooterSection from "@/components/FooterSection";
 const Index = () => {
   return (
     <main className="overflow-x-hidden">
-      <VacationBanner />
       <Navbar />
       <HeroSection />
       <PackagesSection />
