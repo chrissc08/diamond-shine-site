@@ -1,5 +1,6 @@
 import heroCar from "@/assets/hero-car.jpg";
 import { Shield, Wrench, CheckCircle } from "lucide-react";
+import VacationBanner from "@/components/VacationBanner";
 
 const HeroSection = () => {
   return (
@@ -18,7 +19,9 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 text-center pt-28 pb-24">
-        {/* Logo is in the navbar only */}
+        <div className="mb-8 reveal flex justify-center">
+          <VacationBanner />
+        </div>
 
         <h1 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08] mb-6 reveal reveal-delay-1">
           Premium Mobile Detailing —{" "}
