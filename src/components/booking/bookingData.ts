@@ -138,10 +138,14 @@ export function getBookingEndTime(slotId: string, packageId: string): number {
 
 /** Returns which slot IDs would be blocked by a booking at the given slot (using buffer) */
 export function getBlockedSlots(slotId: string, packageId: string): string[] {
-  // Carve-out: Signature/Essential at the 9 AM fallback slot must NEVER block 12:30 or 3 PM.
-  // These small services are guaranteed to fit entirely within the morning window.
-  if (slotId === "9am" && (packageId === "signature" || packageId === "essential")) {
+  // Carve-outs for the 9 AM fallback slot:
+  // - Essential @ 9 AM: blocks nothing (short enough to leave both later slots open).
+  // - Signature @ 9 AM: blocks 12:30 PM only (ends right at 12:30), leaves 3 PM open.
+  if (slotId === "9am" && packageId === "essential") {
     return [];
+  }
+  if (slotId === "9am" && packageId === "signature") {
+    return ["1230pm"];
   }
 
   const endTime = getBookingEndTime(slotId, packageId);
@@ -305,11 +309,19 @@ export function getSlotAvailability(
 
   // 4. Check if any EXISTING booking's end time (with buffer) overlaps into this slot
   for (const booking of dayBookings) {
-    // Carve-out: a Signature/Essential at the 9 AM fallback never blocks later slots.
+    // Carve-outs at the 9 AM fallback slot:
+    // - Essential never blocks later slots.
+    // - Signature only blocks 12:30 PM (handled below by explicit check).
+    if (booking.slotId === "9am" && booking.packageId === "essential") {
+      continue;
+    }
     if (
       booking.slotId === "9am" &&
-      (booking.packageId === "signature" || booking.packageId === "essential")
+      booking.packageId === "signature"
     ) {
+      if (slotId === "1230pm") {
+        return { allowed: false, reason: "Unavailable — previous appointment still in progress" };
+      }
       continue;
     }
     const existingEnd = getBookingEndTime(booking.slotId, booking.packageId);
@@ -321,13 +333,17 @@ export function getSlotAvailability(
   // 5. Check if THIS booking's end time (with buffer) would overlap into already-taken slots
   const requestedEnd = getBookingEndTime(slotId, packageId);
   for (const booking of dayBookings) {
-    // Carve-out: when booking a Signature/Essential into the 9 AM fallback,
-    // it cannot push into 12:30 or 3 PM regardless of math.
-    if (
-      slotId === "9am" &&
-      (packageId === "signature" || packageId === "essential")
-    ) {
+    // Carve-outs when booking into the 9 AM fallback:
+    // - Essential cannot push into any later slot.
+    // - Signature only conflicts with an existing 12:30 PM booking.
+    if (slotId === "9am" && packageId === "essential") {
       break;
+    }
+    if (slotId === "9am" && packageId === "signature") {
+      if (booking.slotId === "1230pm") {
+        return { allowed: false, reason: "Not enough time — overlaps with a later appointment" };
+      }
+      continue;
     }
     const existingStart = slotStartHours[booking.slotId];
     if (existingStart > requestedStart && existingStart < requestedEnd) {
