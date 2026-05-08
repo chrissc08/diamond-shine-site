@@ -71,8 +71,8 @@ describe("Blocked slots from existing bookings", () => {
     // 3pm start (15) is NOT < 15 end, so not blocked
     expect(getBlockedSlots("1230pm", "essential")).toEqual([]);
   });
-  it("Signature at 9am (fallback) blocks NO later slots — explicit carve-out", () => {
-    expect(getBlockedSlots("9am", "signature")).toEqual([]);
+  it("Signature at 9am (fallback) blocks 12:30 only — explicit carve-out", () => {
+    expect(getBlockedSlots("9am", "signature")).toEqual(["1230pm"]);
   });
   it("Essential at 9am (fallback) blocks NO later slots — explicit carve-out", () => {
     expect(getBlockedSlots("9am", "essential")).toEqual([]);
