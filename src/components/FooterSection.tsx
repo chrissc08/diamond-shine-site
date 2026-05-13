@@ -1,5 +1,5 @@
 import logo from "@/assets/logo-clean.png";
-import { Phone, Mail, MapPin, Instagram } from "lucide-react";
+import { Mail, MapPin, Instagram } from "lucide-react";
 
 const FooterSection = () => {
   return (
