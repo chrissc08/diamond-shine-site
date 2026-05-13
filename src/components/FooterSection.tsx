@@ -28,7 +28,6 @@ const FooterSection = () => {
           <div className="flex flex-col gap-3">
             <h4 className="font-display text-sm tracking-[0.15em] uppercase text-foreground mb-1">Contact</h4>
             <a href="mailto:diamondtouchdetailers@gmail.com" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
-            <a href="mailto:diamondtouchdetailers@gmail.com" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
               <Mail className="w-4 h-4" /> diamondtouchdetailers@gmail.com
             </a>
             <a href="https://instagram.com/diamondtouch.details" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors w-fit">
