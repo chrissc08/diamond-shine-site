@@ -1,80 +1,43 @@
-# Admin Dashboard + Bookings, Cancellations & Vacation Mode
+## What I found
 
-## What you'll get
+I ran live DNS lookups against `notify.bookingsdiamondtouchdetailers.com` (the subdomain Lovable Emails needs to verify). The result is a classic **"lame delegation"** — and the side that's broken is **Lovable's**, not yours.
 
-A private admin dashboard at `/admin` where you log in with your email + password. From there you can:
-- See every booking that comes in (past and upcoming)
-- Cancel bookings — the customer is automatically emailed a polite cancellation notice
-- Set vacation/pause dates — the booking calendar blocks those days, a banner appears on the site, and any customers already booked in that range get an automatic email letting them know
+### The technical picture
 
-## How it works
+1. **Your registrar (Name.com) is set up correctly.** Your root domain's nameservers are `ns1hwy / ns2fln / ns3fqs / ns4jnz.name.com`, and the NS records delegating `notify.bookingsdiamondtouchdetailers.com` to Lovable's nameservers (`ns3.lovable.cloud`, `ns4.lovable.cloud`) appear to be in place. Nothing for you to fix at Name.com.
 
-### 1. Database (new tables)
+2. **Lovable's nameservers are answering, but refusing the zone.** When public resolvers (Google 8.8.8.8 and Cloudflare 1.1.1.1) ask `ns3.lovable.cloud` for records on `notify.bookingsdiamondtouchdetailers.com`, they get back:
 
-- **bookings** — every submission saves here: customer name, email, phone, vehicle type, package, add-ons, date, time slot, total estimate, notes, status (`confirmed` / `cancelled` / `completed`), cancellation reason, timestamps
-- **vacation_periods** — start date, end date, optional message ("Back May 15!"), active flag
-- **user_roles** — secure admin-role table (separate from profiles, industry-standard pattern)
+   ```text
+   Status: REFUSED
+   EDE(22): No Reachable Authority at delegation
+   Comment: "Name servers refused query (lame delegation?)"
+   ```
 
-All protected with security rules so only your admin account can view/edit them. Customers can submit a booking but can't read others'.
+   Translation: the delegation points *at* Lovable's nameservers, but Lovable's nameservers don't have the DNS zone for your subdomain loaded. So they say "not my problem" and verification can never succeed — there are literally no SPF/DKIM/MX records being served for it.
 
-### 2. Booking flow update
+3. This is **not** something that resolves with more waiting, and it's not anything you can fix from Name.com. The zone needs to be provisioned on Lovable's infrastructure.
 
-The current booking form only emails you. We'll update the final confirm step to **also save the booking to the database** before sending the email — same UX, no extra clicks for the customer. The customer still gets their confirmation email; you still get notified.
+### What's not the cause
 
-The booking calendar will also check `vacation_periods` and block those dates automatically.
+- Not a propagation delay (the delegation itself is propagated — resolvers are reaching Lovable's NS).
+- Not a Name.com misconfiguration.
+- Not a conflict with `diamondtouch-detailing.com` (different zone entirely).
+- Not anything in your project code or email templates.
 
-### 3. Admin login
+### Recommended next step
 
-- New page at `/admin/login` — email + password
-- Sign up the first time (your account becomes admin via a one-time setup)
-- After that, `disable_signup` is turned on so nobody else can register
-- `/admin/*` routes are protected — non-admins get redirected
+Contact Lovable support and give them this exact info — it'll save a round trip:
 
-### 4. Admin dashboard pages
+- **Domain:** `bookingsdiamondtouchdetailers.com`
+- **Subdomain stuck verifying:** `notify.bookingsdiamondtouchdetailers.com`
+- **Symptom:** Lame delegation — `ns3.lovable.cloud` and `ns4.lovable.cloud` return `REFUSED` (EDE 22, "No Reachable Authority at delegation") for the zone. NS records at the registrar are correct.
+- **Ask:** Please provision the DNS zone for `notify.bookingsdiamondtouchdetailers.com` on Lovable's nameservers, or rerun the email infra setup on your side.
 
-**`/admin` — Bookings overview**
-- Table of all bookings with filters: status (upcoming / past / cancelled), date range, search by name/email
-- Click a booking → detail panel showing everything (customer info, package, add-ons, notes)
-- "Cancel booking" button → optional reason note → confirms → marks cancelled → fires the cancellation email
-- Stats at top: bookings this week, this month, revenue estimate
+You can reach support via the Help menu in Lovable, or email `support@lovable.dev`.
 
-**`/admin/vacation` — Vacation mode**
-- List of upcoming vacation periods
-- "Add vacation" → pick start + end date + optional message
-- When saved, it:
-  - Blocks those dates in the public booking calendar
-  - Shows a banner on the homepage ("On vacation May 10–15 — booking resumes May 16")
-  - Finds all bookings already in that range and emails each customer to reschedule
-- Edit / delete vacation periods anytime
+### What I will do once you approve
 
-**`/admin/emails`** *(small bonus)* — view the email send log so you can see what went out (using the existing email tracking)
+Nothing code-side — this is entirely an infrastructure issue on Lovable's end. Once support fixes the zone, verification should flip to active within minutes (no further action from you at Name.com).
 
-### 5. Customer cancellation email
-
-New app email template ("booking-cancelled") with your branding. Sent automatically when:
-- You cancel a booking from the dashboard
-- A vacation period is created that includes their date
-
-Includes: the cancelled date/time, optional reason, link back to your site to rebook.
-
-### 6. Site banner
-
-Small dismissible banner at the top of the homepage when a vacation period is active or upcoming within 7 days. Pulled live from the database.
-
-## Out of scope (can add later)
-
-- SMS notifications
-- Customer self-service rescheduling link in the email
-- Calendar view (Google-Calendar-style) — we'll start with the table view
-- Multi-admin support
-- Photo upload for the "condition assessment" disclaimer
-
-## Technical notes
-
-- Uses Lovable Cloud (auth + database + edge functions for cancellation emails)
-- Roles stored in dedicated `user_roles` table with a `has_role()` security-definer function (prevents privilege escalation)
-- Cancellation email uses the existing email infrastructure (`send-transactional-email`) — adds one new template
-- Vacation date blocking integrates with the existing `getSlotAvailability` logic in `bookingData.ts`
-- Mock bookings in `bookingData.ts` will be replaced by live database queries
-
-Ready to build when you are.
+If you'd like, after support resolves it I can also do a quick verification pass (re-check DNS, confirm `email_send_log` is processing) and send a test booking email to confirm the whole pipeline works end-to-end.
