@@ -40,12 +40,6 @@ const TimeSlotStep = ({ packageId, dateStr, selected, onSelect }: TimeSlotStepPr
         </div>
       )}
 
-      {packageId === "essential" && !fallbackActive && (
-        <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-muted/50 border border-border text-sm text-muted-foreground">
-          <Info className="w-4 h-4 mt-0.5 shrink-0" />
-          <span>We recommend the 3:00 PM slot when available to keep earlier times open for larger detail packages. Thank you!</span>
-        </div>
-      )}
 
       <div className="grid grid-cols-2 gap-3">
         {timeSlots.map((slot) => {
