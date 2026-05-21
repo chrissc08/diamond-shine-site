@@ -84,6 +84,7 @@ const DetailsStep = ({ details, onChange }: DetailsStepProps) => {
         </div>
 
         <input
+          required
           type="email"
           placeholder="Email Address"
           value={details.email}
