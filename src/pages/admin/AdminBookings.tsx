@@ -143,6 +143,11 @@ const AdminBookings = () => {
 
   const deleteBooking = async () => {
     if (!selected) return;
+    if (selected.status === "confirmed") {
+      toast({ title: "Cancel first", description: "Upcoming bookings must be cancelled before they can be deleted.", variant: "destructive" });
+      setDeleteOpen(false);
+      return;
+    }
     setDeleting(true);
     try {
       const { error } = await supabase.from("bookings").delete().eq("id", selected.id);
@@ -374,14 +379,20 @@ const AdminBookings = () => {
                   </button>
                 </>
               )}
-              <button
-                onClick={() => setDeleteOpen(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-display uppercase tracking-wider text-muted-foreground hover:text-destructive hover:border-destructive/50"
-                title="Permanently delete this booking record"
-              >
-                <Trash2 className="w-4 h-4" />
-                Delete
-              </button>
+              {selected.status === "confirmed" ? (
+                <p className="w-full text-xs text-muted-foreground italic">
+                  Cancel this booking before deleting it.
+                </p>
+              ) : (
+                <button
+                  onClick={() => setDeleteOpen(true)}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-display uppercase tracking-wider text-muted-foreground hover:text-destructive hover:border-destructive/50"
+                  title="Permanently delete this booking record"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </button>
+              )}
             </div>
           </div>
         </div>
