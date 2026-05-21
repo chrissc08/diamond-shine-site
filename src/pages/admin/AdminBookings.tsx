@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { format, parseISO } from "date-fns";
 import { toast } from "@/hooks/use-toast";
-import { Loader2, Search, X, Phone, Mail, MapPin, Car, Calendar as CalIcon, Clock, FileText } from "lucide-react";
+import { Loader2, Search, X, Phone, Mail, MapPin, Car, Calendar as CalIcon, Clock, FileText, Trash2 } from "lucide-react";
 
 type Status = "confirmed" | "cancelled" | "completed";
 
@@ -39,6 +39,9 @@ const AdminBookings = () => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
   const [cancelling, setCancelling] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -138,11 +141,72 @@ const AdminBookings = () => {
     }
   };
 
+  const deleteBooking = async () => {
+    if (!selected) return;
+    setDeleting(true);
+    try {
+      const { error } = await supabase.from("bookings").delete().eq("id", selected.id);
+      if (error) throw error;
+      toast({ title: "Booking deleted" });
+      setDeleteOpen(false);
+      setSelected(null);
+      load();
+    } catch (err: any) {
+      toast({ title: "Delete failed", description: err.message, variant: "destructive" });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const bulkDeleteOld = async () => {
+    const cutoffDays = 90;
+    const cutoff = new Date(Date.now() - cutoffDays * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0];
+    const toDelete = bookings.filter(
+      (b) => b.booking_date < cutoff && (b.status === "completed" || b.status === "cancelled"),
+    );
+    if (toDelete.length === 0) {
+      toast({ title: "Nothing to clean up", description: `No completed or cancelled bookings older than ${cutoffDays} days.` });
+      return;
+    }
+    if (!confirm(`Permanently delete ${toDelete.length} booking${toDelete.length === 1 ? "" : "s"} older than ${cutoffDays} days? This cannot be undone.`)) {
+      return;
+    }
+    setBulkDeleting(true);
+    try {
+      const { error } = await supabase
+        .from("bookings")
+        .delete()
+        .in("id", toDelete.map((b) => b.id));
+      if (error) throw error;
+      toast({ title: `Deleted ${toDelete.length} old booking${toDelete.length === 1 ? "" : "s"}` });
+      load();
+    } catch (err: any) {
+      toast({ title: "Cleanup failed", description: err.message, variant: "destructive" });
+    } finally {
+      setBulkDeleting(false);
+    }
+  };
+
   return (
     <div className="p-8 max-w-7xl">
       <div className="mb-8">
-        <h1 className="font-display text-3xl font-bold tracking-tight">Bookings</h1>
-        <p className="text-muted-foreground text-sm mt-1">Manage all customer appointments</p>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="font-display text-3xl font-bold tracking-tight">Bookings</h1>
+            <p className="text-muted-foreground text-sm mt-1">Manage all customer appointments</p>
+          </div>
+          <button
+            onClick={bulkDeleteOld}
+            disabled={bulkDeleting}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-xs font-display uppercase tracking-wider text-muted-foreground hover:text-destructive hover:border-destructive/50 disabled:opacity-50"
+            title="Permanently delete completed or cancelled bookings older than 90 days"
+          >
+            {bulkDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+            Clean Up Old
+          </button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -293,22 +357,32 @@ const AdminBookings = () => {
                 </div>
               )}
             </div>
-            {selected.status === "confirmed" && (
-              <div className="p-6 border-t border-border flex gap-2">
-                <button
-                  onClick={() => markCompleted(selected)}
-                  className="flex-1 py-2.5 rounded-lg border border-border text-sm font-display uppercase tracking-wider hover:bg-muted/50"
-                >
-                  Mark Completed
-                </button>
-                <button
-                  onClick={() => setCancelOpen(true)}
-                  className="flex-1 py-2.5 rounded-lg bg-destructive/10 text-destructive border border-destructive/30 text-sm font-display uppercase tracking-wider hover:bg-destructive/20"
-                >
-                  Cancel Booking
-                </button>
-              </div>
-            )}
+            <div className="p-6 border-t border-border flex gap-2 flex-wrap">
+              {selected.status === "confirmed" && (
+                <>
+                  <button
+                    onClick={() => markCompleted(selected)}
+                    className="flex-1 min-w-[140px] py-2.5 rounded-lg border border-border text-sm font-display uppercase tracking-wider hover:bg-muted/50"
+                  >
+                    Mark Completed
+                  </button>
+                  <button
+                    onClick={() => setCancelOpen(true)}
+                    className="flex-1 min-w-[140px] py-2.5 rounded-lg bg-destructive/10 text-destructive border border-destructive/30 text-sm font-display uppercase tracking-wider hover:bg-destructive/20"
+                  >
+                    Cancel Booking
+                  </button>
+                </>
+              )}
+              <button
+                onClick={() => setDeleteOpen(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-display uppercase tracking-wider text-muted-foreground hover:text-destructive hover:border-destructive/50"
+                title="Permanently delete this booking record"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -344,6 +418,34 @@ const AdminBookings = () => {
               >
                 {cancelling && <Loader2 className="w-4 h-4 animate-spin" />}
                 Cancel & Notify
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete confirm */}
+      {deleteOpen && selected && (
+        <div className="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center p-4" onClick={() => setDeleteOpen(false)}>
+          <div className="bg-card border border-border rounded-xl max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-display text-lg font-bold mb-2">Permanently delete this booking?</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              This removes <span className="text-foreground font-medium">{selected.customer_name}</span>'s record entirely. The customer will not be notified. This cannot be undone.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setDeleteOpen(false)}
+                className="flex-1 py-2.5 rounded-lg border border-border text-sm font-display uppercase tracking-wider hover:bg-muted/50"
+              >
+                Keep It
+              </button>
+              <button
+                onClick={deleteBooking}
+                disabled={deleting}
+                className="flex-1 py-2.5 rounded-lg bg-destructive text-destructive-foreground text-sm font-display uppercase tracking-wider disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {deleting && <Loader2 className="w-4 h-4 animate-spin" />}
+                Delete Forever
               </button>
             </div>
           </div>
