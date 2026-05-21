@@ -1,6 +1,6 @@
 import * as React from 'npm:react@18.3.1'
 import {
-  Body, Container, Head, Heading, Html, Preview, Section, Text, Hr,
+  Body, Container, Head, Heading, Html, Preview, Section, Text, Hr, Img, Link,
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 
@@ -25,6 +25,7 @@ interface BookingLeadProps {
   addOns?: AddOnItem[]
   notes?: string
   referral?: string
+  imageUrls?: string[]
   submittedAt?: string
 }
 
@@ -42,6 +43,7 @@ const BookingLeadEmail = ({
   addOns,
   notes,
   referral,
+  imageUrls,
   submittedAt,
 }: BookingLeadProps) => (
   <Html lang="en" dir="ltr">
@@ -89,6 +91,24 @@ const BookingLeadEmail = ({
           </Section>
         ) : null}
 
+        {imageUrls && imageUrls.length > 0 ? (
+          <Section style={card}>
+            <Heading as="h2" style={h2}>Customer Photos ({imageUrls.length})</Heading>
+            <Text style={{ ...text, marginBottom: '12px' }}>Tap a photo to view it full-size.</Text>
+            {imageUrls.map((url, i) => (
+              <Link key={i} href={url} style={{ display: 'inline-block', marginRight: '8px', marginBottom: '8px' }}>
+                <Img
+                  src={url}
+                  alt={`Vehicle photo ${i + 1}`}
+                  width="140"
+                  height="140"
+                  style={photoImg}
+                />
+              </Link>
+            ))}
+          </Section>
+        ) : null}
+
         <Hr style={hr} />
         <Text style={footer}>
           Submitted {submittedAt || 'just now'} • Final quote depends on vehicle condition.
@@ -126,6 +146,7 @@ export const template = {
     addOns: [{ name: 'Pet Hair Removal', price: '$25–75' }],
     notes: 'Heavy pet hair in the back seat.',
     referral: '',
+    imageUrls: [],
     submittedAt: 'May 6, 2026 at 2:14 PM',
   },
 } satisfies TemplateEntry
@@ -140,5 +161,6 @@ const rowText = { fontSize: '14px', color: '#0a0a0a', margin: '0 0 6px', lineHei
 const rowLabel = { color: '#6b7280', fontWeight: 600 }
 const rowValue = { color: '#0a0a0a' }
 const text = { fontSize: '14px', color: '#0a0a0a', lineHeight: '1.5', margin: 0 }
+const photoImg = { borderRadius: '6px', objectFit: 'cover' as const, border: '1px solid #e5e7eb' }
 const hr = { borderColor: '#e5e7eb', margin: '24px 0 16px' }
 const footer = { fontSize: '12px', color: '#999999', margin: 0 }
