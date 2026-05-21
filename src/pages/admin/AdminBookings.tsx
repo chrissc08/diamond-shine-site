@@ -26,6 +26,7 @@ interface Booking {
   status: Status;
   cancellation_reason: string | null;
   cancelled_at: string | null;
+  image_urls: string[] | null;
   created_at: string;
 }
 
@@ -260,6 +261,31 @@ const AdminBookings = () => {
               )}
               {selected.notes && <DetailRow icon={FileText} label="Notes" sub={selected.notes} />}
               {selected.referral && <p className="text-xs text-muted-foreground">Referred by: {selected.referral}</p>}
+              {selected.image_urls && selected.image_urls.length > 0 && (
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+                    Customer Photos ({selected.image_urls.length})
+                  </p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {selected.image_urls.map((url, i) => (
+                      <a
+                        key={i}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative aspect-square rounded-lg overflow-hidden border border-border hover:border-primary transition-colors group"
+                      >
+                        <img
+                          src={url}
+                          alt={`Vehicle photo ${i + 1}`}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          loading="lazy"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
               {selected.cancellation_reason && (
                 <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-3">
                   <p className="text-xs uppercase text-destructive font-semibold mb-1">Cancellation Reason</p>
