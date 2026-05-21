@@ -6,8 +6,8 @@ const optionalAddOns = [
   { icon: Droplets, name: "Heavy Stain Removal", price: "$25–100", note: "Targeted deep-cleaning treatment for stubborn stains on upholstery, carpets & fabric surfaces" },
   { icon: ShieldCheck, name: "Ceramic Spray Boost", price: "$20–50", note: "Quick spray-on hydrophobic ceramic boost (not a true ceramic coating) — adds gloss, water beading & short-term UV defense" },
   { icon: Sparkles, name: "Paint Decontamination Treatment", price: "$40–80", note: "Iron removal & clay treatment to eliminate bonded contaminants, leaving paint silky smooth" },
-  { icon: Gem, name: "Leather Protection Treatment", price: "$20–50", note: "Restores, conditions & protects leather with a non-greasy, luxurious finish that prevents cracking" },
-  { icon: Wind, name: "Odor Refresh Treatment", price: "$5–10", note: "A professional-grade air & surface deodorizer that neutralizes lingering odors for a fresh, clean cabin" },
+  { icon: Gem, name: "Leather Protection Treatment", price: "$20–40", note: "Restores, conditions & protects leather with a non-greasy, luxurious finish that prevents cracking" },
+  { icon: Wind, name: "Compressed Air Blowout", price: "$15–30", note: "High-pressure compressed air forced into vents, seams & crevices to dislodge hidden dust & debris" },
 ];
 
 const conditionBased = [
