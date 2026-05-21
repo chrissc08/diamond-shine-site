@@ -99,6 +99,25 @@ const BookingSection = () => {
         return;
       }
 
+      // Re-check availability against the live database right before submitting
+      // to catch slots taken since the user opened the form
+      const { data: liveSlots } = await supabase.rpc("get_booked_slots");
+      const bookingDateStr = selectedDate.toISOString().split("T")[0];
+      const conflict = (liveSlots || []).some(
+        (b: any) => b.booking_date === bookingDateStr && b.time_slot_id === selectedSlot
+      );
+      if (conflict) {
+        toast({
+          title: "Slot just booked",
+          description: "Someone else just booked that time. Please pick another slot.",
+          variant: "destructive",
+        });
+        setSubmitting(false);
+        setSelectedSlot(null);
+        setStep(2);
+        return;
+      }
+
       // Save booking to database first
       const { error: dbError } = await supabase.from("bookings").insert({
         id: bookingId,
@@ -112,14 +131,28 @@ const BookingSection = () => {
         package_price: price,
         package_duration: pkg?.time,
         add_ons: chosenAddOns,
-        booking_date: selectedDate.toISOString().split("T")[0],
+        booking_date: bookingDateStr,
         time_slot_id: selectedSlot,
         time_slot_label: slot?.time || "",
         notes: details.notes || null,
         referral: details.referral || null,
         status: "confirmed",
       });
-      if (dbError) throw dbError;
+      if (dbError) {
+        // Unique-index violation = slot was taken between our check and insert
+        if ((dbError as any).code === "23505") {
+          toast({
+            title: "Slot just booked",
+            description: "Someone else just booked that time. Please pick another slot.",
+            variant: "destructive",
+          });
+          setSubmitting(false);
+          setSelectedSlot(null);
+          setStep(2);
+          return;
+        }
+        throw dbError;
+      }
 
       const { error } = await supabase.functions.invoke("send-transactional-email", {
         body: {
