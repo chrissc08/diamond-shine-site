@@ -69,7 +69,14 @@ const BookingSection = () => {
       case 1: return !!selectedDate;
       case 2: return !!selectedSlot;
       case 3: return true; // add-ons optional
-      case 4: return !!(details.name && details.phone && details.address && details.vehicleType);
+      case 4: return !!(
+        details.name &&
+        details.phone &&
+        details.email &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(details.email.trim()) &&
+        details.address &&
+        details.vehicleType
+      );
       case 5: return true;
       default: return false;
     }
