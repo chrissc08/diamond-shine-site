@@ -118,6 +118,23 @@ const BookingSection = () => {
         return;
       }
 
+      // Upload any attached photos to public storage first
+      const imageUrls: string[] = [];
+      for (let i = 0; i < details.images.length; i++) {
+        const file = details.images[i];
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const path = `${bookingId}/${i}-${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("booking-photos")
+          .upload(path, file, { cacheControl: "3600", upsert: false, contentType: file.type });
+        if (upErr) {
+          console.error("Photo upload failed", upErr);
+          continue;
+        }
+        const { data: pub } = supabase.storage.from("booking-photos").getPublicUrl(path);
+        if (pub?.publicUrl) imageUrls.push(pub.publicUrl);
+      }
+
       // Save booking to database first
       const { error: dbError } = await supabase.from("bookings").insert({
         id: bookingId,
@@ -136,6 +153,7 @@ const BookingSection = () => {
         time_slot_label: slot?.time || "",
         notes: details.notes || null,
         referral: details.referral || null,
+        image_urls: imageUrls,
         status: "confirmed",
       });
       if (dbError) {
@@ -173,6 +191,7 @@ const BookingSection = () => {
             addOns: chosenAddOns,
             notes: details.notes,
             referral: details.referral,
+            imageUrls,
             submittedAt: format(new Date(), "MMM d, yyyy 'at' h:mm a"),
           },
         },
