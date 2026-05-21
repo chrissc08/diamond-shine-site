@@ -143,6 +143,11 @@ const AdminBookings = () => {
 
   const deleteBooking = async () => {
     if (!selected) return;
+    if (selected.status === "confirmed") {
+      toast({ title: "Cancel first", description: "Upcoming bookings must be cancelled before they can be deleted.", variant: "destructive" });
+      setDeleteOpen(false);
+      return;
+    }
     setDeleting(true);
     try {
       const { error } = await supabase.from("bookings").delete().eq("id", selected.id);
