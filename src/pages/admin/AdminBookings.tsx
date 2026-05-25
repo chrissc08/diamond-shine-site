@@ -475,4 +475,60 @@ const DetailRow = ({ icon: Icon, label, sub }: { icon: any; label: string; sub?:
   </div>
 );
 
+const CustomerPhotos = ({ paths }: { paths: string[] }) => {
+  const [urls, setUrls] = useState<string[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const toPath = (val: string) => {
+      const marker = "/booking-photos/";
+      const idx = val.indexOf(marker);
+      return idx >= 0 ? val.slice(idx + marker.length) : val;
+    };
+    (async () => {
+      const objectPaths = paths.map(toPath);
+      const { data, error } = await supabase.storage
+        .from("booking-photos")
+        .createSignedUrls(objectPaths, 60 * 30);
+      if (cancelled) return;
+      if (error) {
+        setUrls([]);
+        return;
+      }
+      setUrls((data || []).map((d) => d.signedUrl || ""));
+    })();
+    return () => { cancelled = true; };
+  }, [paths]);
+
+  return (
+    <div>
+      <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+        Customer Photos ({paths.length})
+      </p>
+      <div className="grid grid-cols-3 gap-2">
+        {urls.map((url, i) => (
+          url ? (
+            <a
+              key={i}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative aspect-square rounded-lg overflow-hidden border border-border hover:border-primary transition-colors group"
+            >
+              <img
+                src={url}
+                alt={`Vehicle photo ${i + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                loading="lazy"
+              />
+            </a>
+          ) : (
+            <div key={i} className="aspect-square rounded-lg border border-border bg-muted animate-pulse" />
+          )
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default AdminBookings;
