@@ -2,8 +2,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { addDays, format, getDay } from "date-fns";
 import { CalendarDays } from "lucide-react";
-import { BOOKING_WINDOW_DAYS } from "./bookingData";
-import { useVacationPeriods, isDateInVacation } from "@/hooks/useVacationPeriods";
 
 interface DateStepProps {
   selected: Date | undefined;
@@ -17,18 +15,14 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
 
   const tomorrow = addDays(today, 1);
   const minDate = tomorrow;
-  const maxDate = addDays(today, BOOKING_WINDOW_DAYS);
-  const { periods } = useVacationPeriods();
 
   const disabledDays = [
     { before: minDate },
-    { after: maxDate },
     // Only allow Monday (1) – Thursday (4). Block Fri (5), Sat (6), Sun (0).
     (date: Date) => {
       const d = getDay(date);
       return d === 0 || d === 5 || d === 6;
     },
-    (date: Date) => !!isDateInVacation(date, periods),
   ];
 
   return (
@@ -52,7 +46,6 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
             onSelect={onSelect}
             disabled={disabledDays}
             fromDate={minDate}
-            toDate={maxDate}
             className={cn("p-3 pointer-events-auto")}
             classNames={{
               months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
