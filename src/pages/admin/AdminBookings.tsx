@@ -331,29 +331,7 @@ const AdminBookings = () => {
               {selected.notes && <DetailRow icon={FileText} label="Notes" sub={selected.notes} />}
               {selected.referral && <p className="text-xs text-muted-foreground">Referred by: {selected.referral}</p>}
               {selected.image_urls && selected.image_urls.length > 0 && (
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
-                    Customer Photos ({selected.image_urls.length})
-                  </p>
-                  <div className="grid grid-cols-3 gap-2">
-                    {selected.image_urls.map((url, i) => (
-                      <a
-                        key={i}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative aspect-square rounded-lg overflow-hidden border border-border hover:border-primary transition-colors group"
-                      >
-                        <img
-                          src={url}
-                          alt={`Vehicle photo ${i + 1}`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                          loading="lazy"
-                        />
-                      </a>
-                    ))}
-                  </div>
-                </div>
+                <CustomerPhotos paths={selected.image_urls} />
               )}
               {selected.cancellation_reason && (
                 <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-3">
@@ -496,5 +474,61 @@ const DetailRow = ({ icon: Icon, label, sub }: { icon: any; label: string; sub?:
     </div>
   </div>
 );
+
+const CustomerPhotos = ({ paths }: { paths: string[] }) => {
+  const [urls, setUrls] = useState<string[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const toPath = (val: string) => {
+      const marker = "/booking-photos/";
+      const idx = val.indexOf(marker);
+      return idx >= 0 ? val.slice(idx + marker.length) : val;
+    };
+    (async () => {
+      const objectPaths = paths.map(toPath);
+      const { data, error } = await supabase.storage
+        .from("booking-photos")
+        .createSignedUrls(objectPaths, 60 * 30);
+      if (cancelled) return;
+      if (error) {
+        setUrls([]);
+        return;
+      }
+      setUrls((data || []).map((d) => d.signedUrl || ""));
+    })();
+    return () => { cancelled = true; };
+  }, [paths]);
+
+  return (
+    <div>
+      <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+        Customer Photos ({paths.length})
+      </p>
+      <div className="grid grid-cols-3 gap-2">
+        {urls.map((url, i) => (
+          url ? (
+            <a
+              key={i}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative aspect-square rounded-lg overflow-hidden border border-border hover:border-primary transition-colors group"
+            >
+              <img
+                src={url}
+                alt={`Vehicle photo ${i + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                loading="lazy"
+              />
+            </a>
+          ) : (
+            <div key={i} className="aspect-square rounded-lg border border-border bg-muted animate-pulse" />
+          )
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default AdminBookings;

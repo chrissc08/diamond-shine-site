@@ -125,7 +125,8 @@ const BookingSection = () => {
         return;
       }
 
-      // Upload any attached photos to public storage first
+      // Upload any attached photos to private storage first; we store the object path
+      // (not a public URL) so admins can later fetch them via short-lived signed URLs.
       const imageUrls: string[] = [];
       for (let i = 0; i < details.images.length; i++) {
         const file = details.images[i];
@@ -138,8 +139,7 @@ const BookingSection = () => {
           console.error("Photo upload failed", upErr);
           continue;
         }
-        const { data: pub } = supabase.storage.from("booking-photos").getPublicUrl(path);
-        if (pub?.publicUrl) imageUrls.push(pub.publicUrl);
+        imageUrls.push(path);
       }
 
       // Save booking to database first
