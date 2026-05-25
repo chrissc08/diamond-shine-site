@@ -1,6 +1,6 @@
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { addDays, isSunday, format } from "date-fns";
+import { addDays, format, getDay } from "date-fns";
 import { CalendarDays } from "lucide-react";
 import { BOOKING_WINDOW_DAYS } from "./bookingData";
 import { useVacationPeriods, isDateInVacation } from "@/hooks/useVacationPeriods";
@@ -23,7 +23,11 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
   const disabledDays = [
     { before: minDate },
     { after: maxDate },
-    (date: Date) => isSunday(date),
+    // Only allow Monday (1) – Thursday (4). Block Fri (5), Sat (6), Sun (0).
+    (date: Date) => {
+      const d = getDay(date);
+      return d === 0 || d === 5 || d === 6;
+    },
     (date: Date) => !!isDateInVacation(date, periods),
   ];
 
@@ -90,7 +94,7 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
       )}
 
       <p className="text-center text-muted-foreground text-xs">
-        Monday – Saturday · Booking available up to {BOOKING_WINDOW_DAYS} days out
+        Monday – Thursday · Booking available up to {BOOKING_WINDOW_DAYS} days out
       </p>
     </div>
   );
