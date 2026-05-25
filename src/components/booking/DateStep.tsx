@@ -94,7 +94,7 @@ const DateStep = ({ selected, onSelect, packageName }: DateStepProps) => {
       )}
 
       <p className="text-center text-muted-foreground text-xs">
-        Monday – Thursday · Booking available up to {BOOKING_WINDOW_DAYS} days out
+        Monday – Thursday only
       </p>
     </div>
   );
