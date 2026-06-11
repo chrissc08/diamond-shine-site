@@ -199,9 +199,6 @@ export interface SlotAvailability {
   reason?: string;
 }
 
-// Maximum bookings per day
-const MAX_BOOKINGS_PER_DAY = 3;
-
 /**
  * Strict, rule-based availability check.
  * All availability is determined by time calculations with 30-min buffers.
