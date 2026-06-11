@@ -98,9 +98,8 @@ export const packages: BookingPackage[] = [
 ];
 
 export const timeSlots: TimeSlot[] = [
-  { id: "9am", time: "9:00 AM", label: "Morning" },
-  { id: "1230pm", time: "12:30 PM", label: "Midday" },
-  { id: "3pm", time: "3:00 PM", label: "Afternoon" },
+  { id: "10am", time: "10:00 AM", label: "Morning" },
+  { id: "2pm", time: "2:00 PM", label: "Afternoon" },
 ];
 
 // Service durations in hours (without buffer)
@@ -124,9 +123,8 @@ export function getTotalBookingTime(packageId: string): number {
 
 // Slot start times in hours from midnight
 export const slotStartHours: Record<string, number> = {
-  "9am": 9,
-  "1230pm": 12.5,
-  "3pm": 15,
+  "10am": 10,
+  "2pm": 14,
 };
 
 // Calculate end time for a booking at a given slot
@@ -136,27 +134,16 @@ export function getBookingEndTime(slotId: string, packageId: string): number {
   return start + getTotalBookingTime(packageId);
 }
 
-/** Returns which slot IDs would be blocked by a booking at the given slot (using buffer) */
+/** Returns which slot IDs would be blocked by a booking at the given slot.
+ * Rules:
+ *  - Interior Revival and Ultimate Detail occupy the entire day → block every other slot.
+ *  - Essential Maintenance and Signature Reset have no time-overlap blockers.
+ */
 export function getBlockedSlots(slotId: string, packageId: string): string[] {
-  // Carve-outs for the 9 AM fallback slot:
-  // - Essential @ 9 AM: blocks nothing (short enough to leave both later slots open).
-  // - Signature @ 9 AM: blocks 12:30 PM only (ends right at 12:30), leaves 3 PM open.
-  if (slotId === "9am" && packageId === "essential") {
-    return [];
+  if (packageId === "interior" || packageId === "diamond") {
+    return timeSlots.filter((s) => s.id !== slotId).map((s) => s.id);
   }
-  if (slotId === "9am" && packageId === "signature") {
-    return ["1230pm"];
-  }
-
-  const endTime = getBookingEndTime(slotId, packageId);
-
-  return timeSlots
-    .filter((s) => {
-      const sStart = slotStartHours[s.id];
-      // Block any slot whose start time is before the booking end time (with buffer)
-      return sStart > slotStartHours[slotId] && sStart < endTime;
-    })
-    .map((s) => s.id);
+  return [];
 }
 
 export const addOns: AddOn[] = [
@@ -168,65 +155,30 @@ export const addOns: AddOn[] = [
   { id: "odor", name: "Compressed Air Blowout", price: "$15–30", icon: "wind" },
 ];
 
-// STRICT PRIORITY RULE: 9 AM reserved for high-duration services only
-// Complete Reset and Signature are NOT allowed at 9 AM (unless fallback is active)
 export function getAllowedSlots(packageId: string, dateStr?: string): string[] {
-  const fallbackActive = dateStr ? is9amFallbackActive(dateStr) : false;
-
   switch (packageId) {
     case "diamond":
-      return ["9am"];           // 5h — only fits at 9 AM
     case "interior":
-      return ["9am"];           // 4h — only fits at 9 AM
+      return ["10am"]; // Long services — morning only, books the whole day
     case "signature":
-      return fallbackActive ? ["9am", "1230pm", "3pm"] : ["1230pm", "3pm"];
     case "essential":
-      return fallbackActive ? ["9am", "1230pm", "3pm"] : ["1230pm", "3pm"];
+      return ["10am", "2pm"];
     default:
       return [];
   }
 }
 
-// ── 9:00 AM Fallback Logic ──
-// If 9 AM is unbooked within 12 hours of appointment start, open it to all services
-const FALLBACK_HOURS = 24;
-
-export function is9amFallbackActive(dateStr: string): boolean {
-  const now = new Date();
-  // Build the 9:00 AM appointment datetime for the given date
-  const [year, month, day] = dateStr.split("-").map(Number);
-  const appointmentTime = new Date(year, month - 1, day, 9, 0, 0);
-
-  // Calculate hours until the 9 AM slot
-  const hoursUntil = (appointmentTime.getTime() - now.getTime()) / (1000 * 60 * 60);
-
-  // Fallback activates when within 12 hours AND the slot is not yet booked
-  if (hoursUntil > FALLBACK_HOURS || hoursUntil < 0) return false;
-
-  // Check if 9 AM is already booked on this date
-  const is9amBooked = mockBookings.some(
-    (b) => b.date === dateStr && b.slotId === "9am"
-  );
-
-  return !is9amBooked;
+// Kept as a no-op for backwards compatibility with existing imports.
+export function is9amFallbackActive(_dateStr: string): boolean {
+  return false;
 }
 
 export function getSlotMessage(packageId: string, dateStr?: string): string | null {
-  const fallbackActive = dateStr ? is9amFallbackActive(dateStr) : false;
-
-  if (fallbackActive && (packageId === "signature" || packageId === "essential")) {
-    return null;
-  }
-
   switch (packageId) {
     case "interior":
-      return "Interior Revival requires a morning appointment due to its duration (4 hours + 30min buffer)";
+      return "Interior Revival is a full-day service — only the 10:00 AM slot is available, and it books out the entire day.";
     case "diamond":
-      return "Ultimate Detail Package requires the 9:00 AM slot (5 hours + 30min buffer)";
-    case "signature":
-      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
-    case "essential":
-      return "This service is available at 12:30 PM and 3:00 PM — the 9:00 AM slot is reserved for larger packages";
+      return "Ultimate Detail is a full-day service — only the 10:00 AM slot is available, and it books out the entire day.";
     default:
       return null;
   }
@@ -234,33 +186,7 @@ export function getSlotMessage(packageId: string, dateStr?: string): string | nu
 
 // ── Mock existing bookings (simulate real schedule) ──
 // Generate mock bookings relative to today so they're always relevant
-function generateMockBookings(): MockBooking[] {
-  const today = new Date();
-  const mocks: MockBooking[] = [];
-
-  // Helper to get a future weekday date string
-  const getFutureDate = (daysAhead: number): string => {
-    const d = new Date(today);
-    d.setDate(d.getDate() + daysAhead);
-    return d.toISOString().split("T")[0];
-  };
-
-  // Day +4: Diamond Full Detail at 9am (blocks 12:30, end time 2:30 PM → 3 PM open)
-  mocks.push({ date: getFutureDate(4), slotId: "9am", packageId: "diamond" });
-
-  // Day +8: Interior Restoration at 9am (end time 1:30 PM → blocks 12:30, 3 PM open)
-  mocks.push({ date: getFutureDate(8), slotId: "9am", packageId: "interior" });
-
-  // Day +10: Signature Reset at 12:30pm (end time 3:00 PM → 3 PM slot available)
-  mocks.push({ date: getFutureDate(10), slotId: "1230pm", packageId: "signature" });
-
-  // Day +14: Essential at 12:30pm, mostly open
-  mocks.push({ date: getFutureDate(14), slotId: "1230pm", packageId: "essential" });
-
-  return mocks;
-}
-
-export const mockBookings: MockBooking[] = generateMockBookings();
+export const mockBookings: MockBooking[] = [];
 
 // Allow runtime replacement with real DB bookings
 export function setLiveBookings(bookings: MockBooking[]) {
@@ -273,9 +199,6 @@ export interface SlotAvailability {
   reason?: string;
 }
 
-// Maximum bookings per day
-const MAX_BOOKINGS_PER_DAY = 3;
-
 /**
  * Strict, rule-based availability check.
  * All availability is determined by time calculations with 30-min buffers.
@@ -286,7 +209,7 @@ export function getSlotAvailability(
   packageId: string,
   slotId: string
 ): SlotAvailability {
-  // 1. Package-level restriction (priority rule: 9 AM reserved for large services, with fallback)
+  // 1. Package-level restriction
   const packageAllowed = getAllowedSlots(packageId, dateStr);
   if (!packageAllowed.includes(slotId)) {
     return { allowed: false, reason: "Not available for this package" };
@@ -294,61 +217,23 @@ export function getSlotAvailability(
 
   const dayBookings = mockBookings.filter((b) => b.date === dateStr);
 
-  // 2. Max 3 bookings per day
-  if (dayBookings.length >= MAX_BOOKINGS_PER_DAY) {
-    return { allowed: false, reason: "Maximum bookings reached for this day" };
-  }
-
-  // 3. If this specific slot is already taken
+  // 2. If this specific slot is already taken
   const slotTaken = dayBookings.some((b) => b.slotId === slotId);
   if (slotTaken) {
     return { allowed: false, reason: "This time is already booked" };
   }
 
-  const requestedStart = slotStartHours[slotId];
-
-  // 4. Check if any EXISTING booking's end time (with buffer) overlaps into this slot
-  for (const booking of dayBookings) {
-    // Carve-outs at the 9 AM fallback slot:
-    // - Essential never blocks later slots.
-    // - Signature only blocks 12:30 PM (handled below by explicit check).
-    if (booking.slotId === "9am" && booking.packageId === "essential") {
-      continue;
-    }
-    if (
-      booking.slotId === "9am" &&
-      booking.packageId === "signature"
-    ) {
-      if (slotId === "1230pm") {
-        return { allowed: false, reason: "Unavailable — previous appointment still in progress" };
-      }
-      continue;
-    }
-    const existingEnd = getBookingEndTime(booking.slotId, booking.packageId);
-    if (requestedStart < existingEnd) {
-      return { allowed: false, reason: "Unavailable — previous appointment still in progress" };
-    }
+  // 3. Interior Revival and Ultimate Detail book out the entire day.
+  //    a) If an existing booking that day is one of those services → nothing else fits.
+  //    b) If the requested booking is one of those services → block when any other booking exists.
+  const dayHasFullDayBooking = dayBookings.some(
+    (b) => b.packageId === "interior" || b.packageId === "diamond"
+  );
+  if (dayHasFullDayBooking) {
+    return { allowed: false, reason: "This day is fully booked" };
   }
-
-  // 5. Check if THIS booking's end time (with buffer) would overlap into already-taken slots
-  const requestedEnd = getBookingEndTime(slotId, packageId);
-  for (const booking of dayBookings) {
-    // Carve-outs when booking into the 9 AM fallback:
-    // - Essential cannot push into any later slot.
-    // - Signature only conflicts with an existing 12:30 PM booking.
-    if (slotId === "9am" && packageId === "essential") {
-      break;
-    }
-    if (slotId === "9am" && packageId === "signature") {
-      if (booking.slotId === "1230pm") {
-        return { allowed: false, reason: "Not enough time — overlaps with a later appointment" };
-      }
-      continue;
-    }
-    const existingStart = slotStartHours[booking.slotId];
-    if (existingStart > requestedStart && existingStart < requestedEnd) {
-      return { allowed: false, reason: "Not enough time — overlaps with a later appointment" };
-    }
+  if ((packageId === "interior" || packageId === "diamond") && dayBookings.length > 0) {
+    return { allowed: false, reason: "This day already has an appointment" };
   }
 
   return { allowed: true };
